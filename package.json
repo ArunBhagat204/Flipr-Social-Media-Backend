@@ -1,0 +1,29 @@
+{
+  "name": "social-media-app",
+  "version": "1.0.0",
+  "description": "A social media web application - Part of the Flipr Externship Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArunBhagat204/Social-Media-App.git"
+  },
+  "author": "Arun Bhagat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArunBhagat204/Social-Media-App/issues"
+  },
+  "homepage": "https://github.com/ArunBhagat204/Social-Media-App#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
