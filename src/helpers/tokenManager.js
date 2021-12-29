@@ -1,10 +1,25 @@
 const jwt = require("jsonwebtoken");
 
-const newToken = (content, expiry) => {
+const newToken = (content, secret, expiry) => {
   console.log("[Token Manager]: Creating Token...");
-  return jwt.sign(content, process.env.EMAIL_TOKEN_SECRET, {
+  return jwt.sign(content, secret, {
     expiresIn: expiry,
   });
 };
 
-module.exports = { newToken };
+const verify = (token, secret) => {
+  try {
+    const info = jwt.verify(token, secret);
+    return {
+      verified: true,
+      content: info,
+    };
+  } catch (err) {
+    return {
+      verified: false,
+      content: err.message,
+    };
+  }
+};
+
+module.exports = { newToken, verify };

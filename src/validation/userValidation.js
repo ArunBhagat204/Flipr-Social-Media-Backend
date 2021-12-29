@@ -42,7 +42,7 @@ const signup = (req) => {
   } catch (err) {
     return {
       success: false,
-      message: err,
+      message: err.message,
     };
   }
   return {
@@ -51,4 +51,11 @@ const signup = (req) => {
   };
 };
 
-module.exports = { signup };
+const login = (req) => {
+  if (!("username" in req || "email" in req) || !("password" in req)) {
+    return { success: false, message: "Field missing" };
+  }
+  return { success: true, message: "Validation successful" };
+};
+
+module.exports = { signup, login };
