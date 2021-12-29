@@ -7,8 +7,9 @@ const deleteAccount = (req) => {
       if (err) {
         throw new Error(err.message);
       }
+      console.log(res);
       if (
-        bcrypt.compare(req.body.passsword, res.hash, (err, match) => {
+        bcrypt.compare(req.body.password, res.hash, (err, match) => {
           if (!match) {
             throw new Error("Password Incorrect");
           }

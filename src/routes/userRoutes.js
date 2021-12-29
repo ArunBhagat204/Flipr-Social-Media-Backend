@@ -15,16 +15,6 @@ router.get("/email_verify", (req, res) => {
   res.status(result.status).send(`<h4>${result.message}</h4>`);
 });
 
-router.post("/login", (req, res) => {
-  const result = authController.login(req.body);
-  res
-    .cookie("login_token", result.token, {
-      httpOnly: true,
-    })
-    .status(result.success === false ? 403 : 200)
-    .json(result);
-});
-
 router.post("/logout", authorization, (req, res) => {
   const result = authController.logout(req);
   if (result.success === false) {
@@ -32,6 +22,11 @@ router.post("/logout", authorization, (req, res) => {
   } else {
     return res.clearCookie("login_token").status(200).json(result);
   }
+});
+
+router.post("/forgot_password", (req, res) => {
+  const result = authController.forgotPassword(req);
+  return res.status(result.success === false ? 401 : 200).json(result);
 });
 
 router.post("/delete_account", authorization, (req, res) => {
