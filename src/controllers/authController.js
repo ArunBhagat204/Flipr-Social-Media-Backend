@@ -3,6 +3,7 @@ const userValidation = require("../validation/userValidation");
 const emailSender = require("../helpers/emailSender");
 const tokenManager = require("../helpers/tokenManager");
 const bcrypt = require("bcrypt");
+const res = require("express/lib/response");
 
 const signup = (req) => {
   const validationRes = userValidation.signup(req);
@@ -135,4 +136,20 @@ const login = (req) => {
   };
 };
 
-module.exports = { signup, email_verify, login };
+const logout = (req) => {
+  try {
+    userModel.exists({ username: req.userId }, (err, res) => {
+      if (!res) {
+        throw new Error("Invalid user credentials");
+      }
+    });
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+  return { success: true, message: "Successfully logged out" };
+};
+
+module.exports = { signup, email_verify, login, logout };

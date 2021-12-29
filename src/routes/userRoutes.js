@@ -1,4 +1,5 @@
 const express = require("express");
+const authorization = require("../middlewares/authorization");
 const authController = require("../controllers/authController");
 
 const router = express.Router();
@@ -21,6 +22,15 @@ router.post("/login", (req, res) => {
     })
     .status(result.success === false ? 403 : 200)
     .json(result);
+});
+
+router.post("/logout", authorization, (req, res) => {
+  const result = authController.logout(req);
+  if (result.success === false) {
+    return res.status(401).json(result);
+  } else {
+    return res.clearCookie("login_token").status(200).json(result);
+  }
 });
 
 router.get("*", (req, res) => {
