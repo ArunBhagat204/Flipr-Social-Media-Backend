@@ -30,15 +30,10 @@ userSchema.pre("save", async function (next) {
   try {
     const hashedPassword = await bcrypt.hash(this.hash, 10);
     this.hash = hashedPassword;
-    console.log("[UserModel]: Password hashed");
   } catch (err) {
     console.log(err.message);
   }
   next();
-});
-
-userSchema.post("save", async function (next) {
-  console.log("[UserModel] : Account saved");
 });
 
 const user = mongoose.model("User", userSchema);

@@ -53,7 +53,6 @@ const email_verify = (token) => {
     };
   }
   try {
-    console.log(decoded.content.username);
     userModel.findOneAndUpdate(
       { username: decoded.content.username },
       { email_verified: true },
@@ -80,7 +79,6 @@ const email_verify = (token) => {
       message: `Verification failed - ${err.message}`,
     };
   }
-  console.log("[Auth]: Email verified for user");
   return {
     status: 200,
     message: "Email verification successful!",

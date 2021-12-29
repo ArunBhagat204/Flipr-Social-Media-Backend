@@ -1,6 +1,7 @@
 const express = require("express");
 const authorization = require("../middlewares/authorization");
 const authController = require("../controllers/authController");
+const userController = require("../controllers/userController");
 
 const router = express.Router();
 
@@ -28,6 +29,15 @@ router.post("/logout", authorization, (req, res) => {
   const result = authController.logout(req);
   if (result.success === false) {
     return res.status(401).json(result);
+  } else {
+    return res.clearCookie("login_token").status(200).json(result);
+  }
+});
+
+router.post("/delete_account", authorization, (req, res) => {
+  const result = userController.deleteAccount(req);
+  if (result.success === false) {
+    return res.status(403).json(result);
   } else {
     return res.clearCookie("login_token").status(200).json(result);
   }
