@@ -1,6 +1,6 @@
 const userModel = require("../models/user");
 
-const signup = (req) => {
+const signup = async (req) => {
   if (!("username" in req && "password" in req && "email" in req)) {
     return { success: false, message: "Field missing" };
   }
@@ -22,23 +22,17 @@ const signup = (req) => {
     };
   }
   try {
-    if (
-      userModel.exists({ username: req.username }, (err, res) => {
-        if (res) {
-          throw new Error("Username already exists");
-        }
-      })
-    );
-    if (
-      userModel.exists(
-        { email: req.email, email_verified: true },
-        (err, res) => {
-          if (res) {
-            throw new Error("Email already used");
-          }
-        }
-      )
-    );
+    const userCheck = await userModel.exists({ username: req.username });
+    const emailCheck = await userModel.exists({
+      email: req.email,
+      email_verified: true,
+    });
+    if (userCheck || emailCheck) {
+      return {
+        success: false,
+        message: "Credentials already in use",
+      };
+    }
   } catch (err) {
     return {
       success: false,

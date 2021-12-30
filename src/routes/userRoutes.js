@@ -11,8 +11,8 @@ router.get("/", authorization, search, async (req, res) => {
   res.status(result.success === false ? 403 : 200).json(result.users);
 });
 
-router.post("/signup", (req, res) => {
-  const result = authController.signup(req.body);
+router.post("/signup", async (req, res) => {
+  const result = await authController.signup(req.body);
   res.status(result.success === false ? 403 : 200).json(result);
 });
 

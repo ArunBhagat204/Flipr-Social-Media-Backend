@@ -4,8 +4,8 @@ const emailSender = require("../helpers/emailSender");
 const tokenManager = require("../helpers/tokenManager");
 const bcrypt = require("bcrypt");
 
-const signup = (req) => {
-  const validationRes = userValidation.signup(req);
+const signup = async (req) => {
+  const validationRes = await userValidation.signup(req);
   if (validationRes.success === false) {
     return validationRes;
   }
@@ -84,36 +84,30 @@ const email_verify = (token) => {
   };
 };
 
-const login = (req) => {
+const login = async (req) => {
   const validation = userValidation.login(req);
   if (!validation.success) {
     return { success: false, message: validation.message };
   }
   const credMatch = (req, db) => {
-    bcrypt.compare(req.password, db.hash, (err, match) => {
-      if (err) {
-        console.log(err);
-      }
-      if (!match) {
-        throw new Error("Incorrect Password");
-      }
-    });
+    const match = bcrypt.compareSync(req.password, db.hash);
+    if (!match) {
+      throw new Error("Incorrect Password");
+    }
   };
   try {
     if ("username" in req) {
-      userModel.findOne({ username: req.username }, (err, res) => {
-        if (!res) {
-          throw new Error("No such username exists");
-        }
-        credMatch(req, res);
-      });
+      const user = await userModel.findOne({ username: req.username }).exec();
+      if (!user) {
+        throw new Error("No such username exists");
+      }
+      credMatch(req, user);
     } else {
-      userModel.findOne({ email: req.email }, (err, res) => {
-        if (!res) {
-          throw new Error("No such email exists");
-        }
-        credMatch(req, res);
-      });
+      const user = await userModel.findOne({ email: req.email }).exec();
+      if (!user) {
+        throw new Error("No such email exists");
+      }
+      credMatch(req, user);
     }
   } catch (err) {
     return { success: false, message: err.message };
