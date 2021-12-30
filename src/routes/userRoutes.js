@@ -20,6 +20,11 @@ router.get("/:id", authorization, async (req, res) => {
   return res.status(res.success === false ? 403 : 200).json(result);
 });
 
+router.put("/:id", authorization, async (req, res) => {
+  const result = await userController.editProfile(req);
+  return res.status(res.success === false ? 403 : 200).json(result);
+});
+
 router.post("/logout", authorization, (req, res) => {
   const result = authController.logout(req);
   if (result.success === false) {

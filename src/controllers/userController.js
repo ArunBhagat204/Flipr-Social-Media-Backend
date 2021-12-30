@@ -20,6 +20,33 @@ const getProfile = async (req) => {
   }
 };
 
+const editProfile = async (req) => {
+  try {
+    const user = await userModel.findById(req.params.id).exec();
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (req.userId != user.username) {
+      throw new Error("Cannot edit other user's profile");
+    }
+    const updatedUser = await userModel.findByIdAndUpdate(req.params.id, {
+      username: req.body.username,
+      email: req.body.email,
+      hash: bcrypt.hashSync(req.body.password, 10),
+    });
+    return {
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
 const deleteAccount = (req) => {
   try {
     userModel.findOne({ username: req.userId }, (err, res) => {
@@ -51,4 +78,4 @@ const deleteAccount = (req) => {
   };
 };
 
-module.exports = { deleteAccount, getProfile };
+module.exports = { deleteAccount, getProfile, editProfile };
