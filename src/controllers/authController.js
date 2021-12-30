@@ -131,18 +131,6 @@ const login = (req) => {
 };
 
 const logout = (req) => {
-  try {
-    userModel.exists({ username: req.userId }, (err, res) => {
-      if (!res) {
-        throw new Error("Invalid user credentials");
-      }
-    });
-  } catch (err) {
-    return {
-      success: false,
-      message: err.message,
-    };
-  }
   return { success: true, message: "Successfully logged out" };
 };
 

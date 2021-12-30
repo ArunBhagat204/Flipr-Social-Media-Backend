@@ -15,6 +15,11 @@ router.get("/email_verify", (req, res) => {
   res.status(result.status).send(`<h4>${result.message}</h4>`);
 });
 
+router.get("/:id", authorization, async (req, res) => {
+  const result = await userController.getProfile(req);
+  return res.status(res.success === false ? 403 : 200).json(result);
+});
+
 router.post("/logout", authorization, (req, res) => {
   const result = authController.logout(req);
   if (result.success === false) {

@@ -1,13 +1,31 @@
 const userModel = require("../models/user");
 const bcrypt = require("bcrypt");
 
+const getProfile = async (req) => {
+  try {
+    const user = await userModel.findById(req.params.id).exec();
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return {
+      username: user.username,
+      email: user.email,
+      email_verfied: user.email_verified,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
 const deleteAccount = (req) => {
   try {
     userModel.findOne({ username: req.userId }, (err, res) => {
       if (err) {
         throw new Error(err.message);
       }
-      console.log(res);
       if (
         bcrypt.compare(req.body.password, res.hash, (err, match) => {
           if (!match) {
@@ -33,4 +51,4 @@ const deleteAccount = (req) => {
   };
 };
 
-module.exports = { deleteAccount };
+module.exports = { deleteAccount, getProfile };
