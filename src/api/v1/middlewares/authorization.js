@@ -14,7 +14,7 @@ const authorization = (req, res, next) => {
     });
   }
   try {
-    const decoded = tokenManager.verify(token, process.env.AUTH_TOKEN_SECRET);
+    const decoded = tokenManager.verify(token, process.env.JWT_TOKEN_SECRET);
     if (decoded.verified === false) {
       return res.status(401).json({
         success: false,

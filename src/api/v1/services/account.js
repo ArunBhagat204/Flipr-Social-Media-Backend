@@ -7,7 +7,7 @@ const forgotPassword = (req) => {
   if (req.query.token) {
     const decoded = tokenManager.verify(
       req.query.token,
-      process.env.PASS_TOKEN_SECRET
+      process.env.JWT_TOKEN_SECRET
     );
     if (decoded.verified === false) {
       return {
@@ -41,7 +41,7 @@ const forgotPassword = (req) => {
     try {
       const verificationToken = tokenManager.newToken(
         { username: req.body.username },
-        process.env.PASS_TOKEN_SECRET,
+        process.env.JWT_TOKEN_SECRET,
         "1h"
       );
       userModel.findOne({ username: req.body.username }, (err, res) => {

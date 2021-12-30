@@ -33,7 +33,7 @@ const login = async (req) => {
   }
   const loginToken = tokenManager.newToken(
     { username: req.username },
-    process.env.AUTH_TOKEN_SECRET,
+    process.env.JWT_TOKEN_SECRET,
     "1h"
   );
   return {

@@ -1,14 +1,14 @@
-const registerUser = require("../services/registerUser");
+const register = require("../services/register");
 const accountServices = require("../services/account");
 const auth = require("../services/auth");
 
 const signup = async (req, res) => {
-  const result = await registerUser.register(req.body);
+  const result = await register.registerUser(req.body);
   res.status(result.success === false ? 500 : 200).json(result);
 };
 
 const email_verify = (req, res) => {
-  const result = registerUser.emailVerify(req.query.token);
+  const result = register.emailVerify(req.query.token);
   res.status(result.status).send(`<h4>${result.message}</h4>`);
 };
 

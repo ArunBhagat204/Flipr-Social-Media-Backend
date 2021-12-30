@@ -3,7 +3,7 @@ const userModel = require("../models/user");
 const tokenManager = require("../helpers/tokenManager");
 const emailSender = require("../helpers/emailSender");
 
-const register = async (req) => {
+const registerUser = async (req) => {
   const validationRes = await validation.signup(req);
   if (validationRes.success === false) {
     return validationRes;
@@ -17,7 +17,7 @@ const register = async (req) => {
     user.save();
     const verificationToken = tokenManager.newToken(
       { username: req.username },
-      process.env.EMAIL_TOKEN_SECRET,
+      process.env.JWT_TOKEN_SECRET,
       "1h"
     );
     const mail = {
@@ -43,7 +43,7 @@ const register = async (req) => {
 };
 
 const emailVerify = (token) => {
-  const decoded = tokenManager.verify(token, process.env.EMAIL_TOKEN_SECRET);
+  const decoded = tokenManager.verify(token, process.env.JWT_TOKEN_SECRET);
   if (decoded.verified === false) {
     return {
       status: 401,
@@ -83,4 +83,4 @@ const emailVerify = (token) => {
   };
 };
 
-module.exports = { register, emailVerify };
+module.exports = { registerUser, emailVerify };

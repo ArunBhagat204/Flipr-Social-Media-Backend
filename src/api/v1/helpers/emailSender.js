@@ -1,4 +1,4 @@
-const transporter = require("../config/emailConfig").transporter;
+const transporter = require("../../../config/emailConfig").transporter;
 
 const send = (mail) => {
   transporter
