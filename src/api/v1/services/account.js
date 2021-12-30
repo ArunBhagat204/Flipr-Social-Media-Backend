@@ -1,7 +1,7 @@
-const tokenManager = require("../helpers/tokenManager");
+const tokenManager = require("../helpers/token_manager");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
-const emailSender = require("../helpers/emailSender");
+const emailSender = require("../helpers/email_sender");
 
 const forgotPassword = (req) => {
   if (req.query.token) {

@@ -1,7 +1,7 @@
 const validation = require("./validation");
 const userModel = require("../models/user");
-const tokenManager = require("../helpers/tokenManager");
-const emailSender = require("../helpers/emailSender");
+const tokenManager = require("../helpers/token_manager");
+const emailSender = require("../helpers/email_sender");
 
 const registerUser = async (req) => {
   const validationRes = await validation.signup(req);

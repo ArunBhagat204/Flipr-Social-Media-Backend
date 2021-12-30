@@ -1,4 +1,4 @@
-const tokenManager = require("../helpers/tokenManager");
+const tokenManager = require("../helpers/token_manager");
 
 const authorization = (req, res, next) => {
   let token;

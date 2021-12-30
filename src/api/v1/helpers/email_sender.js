@@ -1,4 +1,4 @@
-const transporter = require("../../../config/emailConfig").transporter;
+const transporter = require("../../../config/email_config").transporter;
 
 const send = (mail) => {
   transporter
@@ -8,7 +8,7 @@ const send = (mail) => {
       subject: mail.subject,
       html: mail.body,
     })
-    .then(() => console.log("[Email Sender] : E-mail sent successfully!"))
+    .then(() => console.log("[Email Sender] : New email sent"))
     .catch((err) => {
       if (err) {
         console.log(err);

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const newToken = (content, secret, expiry) => {
-  console.log("[Token Manager]: Creating Token...");
+  console.log("[Token Manager]: New token issued");
   return jwt.sign(content, secret, {
     expiresIn: expiry,
   });

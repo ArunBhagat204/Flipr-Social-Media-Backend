@@ -1,7 +1,7 @@
 const validation = require("./validation");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
-const tokenManager = require("../helpers/tokenManager");
+const tokenManager = require("../helpers/token_manager");
 
 const login = async (req) => {
   const validationRes = validation.login(req);
