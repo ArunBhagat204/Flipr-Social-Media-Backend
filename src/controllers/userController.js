@@ -1,107 +1,28 @@
-const userModel = require("../models/user");
-const bcrypt = require("bcrypt");
+const accountServices = require("../services/account");
+const profileServices = require("../services/profile");
 
-const userSearch = async (req) => {
-  try {
-    let users = await userModel
-      .find(
-        {
-          username: { $regex: req.userQuery },
-          email: { $regex: req.emailQuery },
-        },
-        "username email email_verified"
-      )
-      .exec();
-    if (users.length > 100) {
-      users = users.slice(0, 100);
-    }
-    return {
-      success: true,
-      users: users,
-    };
-  } catch (err) {
-    return {
-      success: false,
-      message: err.message,
-    };
-  }
+const userSearch = async (req, res) => {
+  const result = await profileServices.userSearch(req.body);
+  res.status(result.success === false ? 403 : 200).json(result.users);
 };
 
-const getProfile = async (req) => {
-  try {
-    const user = await userModel.findById(req.params.id).exec();
-    if (!user) {
-      throw new Error("User not found");
-    }
-    return {
-      username: user.username,
-      email: user.email,
-      email_verfied: user.email_verified,
-    };
-  } catch (err) {
-    return {
-      success: false,
-      message: err.message,
-    };
-  }
+const getProfile = async (req, res) => {
+  const result = await profileServices.getProfile(req);
+  return res.status(res.success === false ? 403 : 200).json(result);
 };
 
-const editProfile = async (req) => {
-  try {
-    const user = await userModel.findById(req.params.id).exec();
-    if (!user) {
-      throw new Error("User not found");
-    }
-    if (req.userId != user.username) {
-      throw new Error("Cannot edit other user's profile");
-    }
-    const updatedUser = await userModel.findByIdAndUpdate(req.params.id, {
-      username: req.body.username,
-      email: req.body.email,
-      hash: bcrypt.hashSync(req.body.password, 10),
-    });
-    return {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-    };
-  } catch (err) {
-    return {
-      success: false,
-      message: err.message,
-    };
-  }
+const editProfile = async (req, res) => {
+  const result = await userController.editProfile(req);
+  return res.status(res.success === false ? 403 : 200).json(result);
 };
 
-const deleteAccount = (req) => {
-  try {
-    userModel.findOne({ username: req.userId }, (err, res) => {
-      if (err) {
-        throw new Error(err.message);
-      }
-      if (
-        bcrypt.compare(req.body.password, res.hash, (err, match) => {
-          if (!match) {
-            throw new Error("Password Incorrect");
-          }
-        })
-      );
-    });
-  } catch (err) {
-    return {
-      success: false,
-      message: err.message,
-    };
+const deleteAccount = async (req, res) => {
+  const result = await accountServices.deleteAccount(req);
+  if (result.success === false) {
+    return res.status(403).json(result);
+  } else {
+    return res.clearCookie("login_token").status(200).json(result);
   }
-  userModel.findOneAndDelete({ username: req.userId }, (err, res) => {
-    if (err) {
-      console.log(err);
-    }
-  });
-  return {
-    success: true,
-    message: "Account deleted successfully",
-  };
 };
 
 module.exports = { deleteAccount, getProfile, editProfile, userSearch };

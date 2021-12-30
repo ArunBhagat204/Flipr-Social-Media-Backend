@@ -12,7 +12,8 @@ app.use(cookieParser());
 
 mongoose.connect(dbConfig.dbURI, null, (err) => {
   if (err) {
-    console.log(`Mongoose connection error - ${err.message}`);
+    console.log(`[Database connection error]: ${err.message}`);
+    process.exit(1);
   }
 });
 

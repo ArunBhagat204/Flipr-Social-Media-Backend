@@ -5,18 +5,10 @@ const authController = require("../controllers/authController");
 const router = express.Router();
 
 router.get("/ping", (req, res) => {
-  res.status(200).send("<h2>Server running...<h2>");
+  res.status(200).send("Server running...");
 });
 
-router.post("/login", async (req, res) => {
-  const result = await authController.login(req.body);
-  res
-    .cookie("login_token", result.token, {
-      httpOnly: true,
-    })
-    .status(result.success === false ? 403 : 200)
-    .json(result);
-});
+router.post("/login", authController.login);
 
 router.use("/users", userRoutes);
 
