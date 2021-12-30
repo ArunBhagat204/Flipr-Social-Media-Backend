@@ -1,9 +1,15 @@
 const express = require("express");
 const authorization = require("../middlewares/authorization");
+const search = require("../middlewares/search");
 const authController = require("../controllers/authController");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
+
+router.get("/", authorization, search, async (req, res) => {
+  const result = await userController.userSearch(req.body);
+  res.status(result.success === false ? 403 : 200).json(result.users);
+});
 
 router.post("/signup", (req, res) => {
   const result = authController.signup(req.body);

@@ -1,6 +1,32 @@
 const userModel = require("../models/user");
 const bcrypt = require("bcrypt");
 
+const userSearch = async (req) => {
+  try {
+    let users = await userModel
+      .find(
+        {
+          username: { $regex: req.userQuery },
+          email: { $regex: req.emailQuery },
+        },
+        "username email email_verified"
+      )
+      .exec();
+    if (users.length > 100) {
+      users = users.slice(0, 100);
+    }
+    return {
+      success: true,
+      users: users,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
 const getProfile = async (req) => {
   try {
     const user = await userModel.findById(req.params.id).exec();
@@ -78,4 +104,4 @@ const deleteAccount = (req) => {
   };
 };
 
-module.exports = { deleteAccount, getProfile, editProfile };
+module.exports = { deleteAccount, getProfile, editProfile, userSearch };
