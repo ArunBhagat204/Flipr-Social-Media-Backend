@@ -1,8 +1,6 @@
-const axios = require("axios");
 const tokenManager = require("../helpers/token_manager");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
-const axiosConfig = require("../../../config/axios_config");
 
 const forgotPassword = (token, body) => {
   if (token) {
@@ -55,14 +53,7 @@ const forgotPassword = (token, body) => {
                     http://localhost:3000/users/forgot_password?token=${verificationToken}<br><br>
                     Team Social-Media-App`,
         };
-        axios
-          .post("http://localhost:8000/email/send", mail, axiosConfig.props)
-          .then((res) => {
-            console.log("[AXIOS]: ", res.data);
-          })
-          .catch((err) => {
-            console.log("[AXIOS]: ", err.message);
-          });
+        emailSender.send(mail);
       });
     } catch (err) {
       return {

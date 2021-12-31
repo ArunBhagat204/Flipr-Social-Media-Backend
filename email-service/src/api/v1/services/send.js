@@ -6,13 +6,13 @@ const transporter = createTransporter.transporter(
   emailProps.PASS
 );
 
-const send = async (mail) => {
+const send = async (data) => {
   try {
     const response = await transporter.sendMail({
-      to: mail.address,
+      to: data.mail.address,
       from: `"Social Media App" <${emailProps.USERID}>`,
-      subject: mail.subject,
-      html: mail.body,
+      subject: data.mail.subject,
+      html: data.mail.body,
     });
     return {
       success: true,
