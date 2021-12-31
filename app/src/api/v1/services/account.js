@@ -1,14 +1,11 @@
 const tokenManager = require("../helpers/token_manager");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
-const emailSender = require("../helpers/email_sender");
+const axiosConfig = require("../../../config/axios_config");
 
-const forgotPassword = (req) => {
-  if (req.query.token) {
-    const decoded = tokenManager.verify(
-      req.query.token,
-      process.env.JWT_TOKEN_SECRET
-    );
+const forgotPassword = (token, body) => {
+  if (token) {
+    const decoded = tokenManager.verify(token, process.env.JWT_TOKEN_SECRET);
     if (decoded.verified === false) {
       return {
         success: false,
@@ -16,7 +13,7 @@ const forgotPassword = (req) => {
       };
     }
     try {
-      const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+      const hashedPassword = bcrypt.hashSync(body.password, 10);
       userModel.findOneAndUpdate(
         { username: decoded.content.username },
         { hash: hashedPassword },
@@ -40,11 +37,11 @@ const forgotPassword = (req) => {
   } else {
     try {
       const verificationToken = tokenManager.newToken(
-        { username: req.body.username },
+        { username: body.username },
         process.env.JWT_TOKEN_SECRET,
         "1h"
       );
-      userModel.findOne({ username: req.body.username }, (err, res) => {
+      userModel.findOne({ username: body.username }, (err, res) => {
         if (err) {
           console.log(err);
         }
@@ -57,7 +54,14 @@ const forgotPassword = (req) => {
                     http://localhost:3000/users/forgot_password?token=${verificationToken}<br><br>
                     Team Social-Media-App`,
         };
-        emailSender.send(mail);
+        axios
+          .post("http://localhost:8000/email/send", mail, axiosConfig.props)
+          .then((res) => {
+            console.log("[AXIOS]: ", res.data);
+          })
+          .catch((err) => {
+            console.log("[AXIOS]: ", err.message);
+          });
       });
     } catch (err) {
       return {
@@ -67,32 +71,25 @@ const forgotPassword = (req) => {
     }
     return {
       success: true,
-      message: `Password change email sent to '${req.body.username}'`,
+      message: `Password change email sent to '${body.username}'`,
     };
   }
 };
 
-const deleteAccount = (req) => {
+const deleteAccount = async (userId, password) => {
   try {
-    userModel.findOne({ username: req.userId }, (err, res) => {
-      if (err) {
-        throw new Error(err.message);
-      }
-      if (
-        bcrypt.compare(req.body.password, res.hash, (err, match) => {
-          if (!match) {
-            throw new Error("Password Incorrect");
-          }
-        })
-      );
-    });
+    const res = await userModel.findOne({ username: userId }).exec();
+    const match = bcrypt.compareSync(password, res.hash);
+    if (!match) {
+      throw new Error("Password Incorrect");
+    }
   } catch (err) {
     return {
       success: false,
       message: err.message,
     };
   }
-  userModel.findOneAndDelete({ username: req.userId }, (err, res) => {
+  userModel.findOneAndDelete({ username: userId }, (err, res) => {
     if (err) {
       console.log(err);
     }

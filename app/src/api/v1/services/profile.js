@@ -1,12 +1,12 @@
 const userModel = require("../models/user");
 
-const userSearch = async (req) => {
+const userSearch = async (username, email) => {
   try {
     let users = await userModel
       .find(
         {
-          username: { $regex: req.userQuery },
-          email: { $regex: req.emailQuery },
+          username: { $regex: username },
+          email: { $regex: email },
         },
         "username email email_verified"
       )
@@ -26,9 +26,9 @@ const userSearch = async (req) => {
   }
 };
 
-const getProfile = async (req) => {
+const getProfile = async (userId) => {
   try {
-    const user = await userModel.findById(req.params.id).exec();
+    const user = await userModel.findById(userId).exec();
     if (!user) {
       throw new Error("User not found");
     }
@@ -45,9 +45,9 @@ const getProfile = async (req) => {
   }
 };
 
-const editProfile = async (req) => {
+const editProfile = async (userId, body) => {
   try {
-    const user = await userModel.findById(req.params.id).exec();
+    const user = await userModel.findById(userId).exec();
     if (!user) {
       throw new Error("User not found");
     }
@@ -55,9 +55,9 @@ const editProfile = async (req) => {
       throw new Error("Cannot edit other user's profile");
     }
     return {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
+      username: body.username,
+      email: body.email,
+      password: body.password,
     };
   } catch (err) {
     return {

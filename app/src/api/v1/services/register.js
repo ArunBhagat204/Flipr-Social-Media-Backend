@@ -1,7 +1,8 @@
+const axios = require("axios");
 const validation = require("./validation");
 const userModel = require("../models/user");
 const tokenManager = require("../helpers/token_manager");
-const emailSender = require("../helpers/email_sender");
+const axiosConfig = require("../../../config/axios_config");
 
 const registerUser = async (req) => {
   const validationRes = await validation.signup(req);
@@ -29,7 +30,14 @@ const registerUser = async (req) => {
             http://localhost:3000/users/email_verify?token=${verificationToken}<br><br>
             Team Social-Media-App`,
     };
-    emailSender.send(mail);
+    axios
+      .post("http://localhost:8000/email/send", mail, axiosConfig.props)
+      .then((res) => {
+        console.log("RESPONSE RECEIVED: ", res.data);
+      })
+      .catch((err) => {
+        console.log("AXIOS ERROR: ", err.message);
+      });
   } catch (err) {
     return {
       success: false,

@@ -30,7 +30,10 @@ const logout = (req, res) => {
 };
 
 const forgotPassword = async (req, res) => {
-  const result = await accountServices.forgotPassword(req);
+  const result = await accountServices.forgotPassword(
+    req.query.token,
+    req.body
+  );
   res.status(result.success === false ? 401 : 200).json(result);
 };
 

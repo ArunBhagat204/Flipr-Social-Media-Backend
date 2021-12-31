@@ -10,7 +10,6 @@ const { PORT, ENV } = require("./config/server_config").props;
 const app = express();
 
 app.use(morgan("dev"));
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -21,6 +20,7 @@ mongoose.connect(dbConfig.dbURI, null, (err) => {
     console.log(`[Database connection error]: ${err.message}`);
     process.exit(1);
   }
+  console.log("DB connection established");
   app.listen(PORT, (err) => {
     if (err) {
       console.log(`[SERVER ERROR]: ${err.message}`);
