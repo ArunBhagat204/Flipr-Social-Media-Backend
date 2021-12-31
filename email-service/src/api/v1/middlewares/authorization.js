@@ -6,7 +6,7 @@ const authorization = (req, res, next) => {
     if (serverConfig.props.AUTH_KEY === authToken) {
       return next();
     }
-    res.status(500).json({
+    res.status(401).json({
       success: false,
       message: "Authentication Key Invalid",
     });
