@@ -1,3 +1,4 @@
+const axios = require("axios");
 const tokenManager = require("../helpers/token_manager");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");

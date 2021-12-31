@@ -3,8 +3,8 @@ const profileServices = require("../services/profile");
 
 const userSearch = async (req, res) => {
   const result = await profileServices.userSearch(
-    req.userQuery,
-    req.emailQuery
+    req.body.userQuery,
+    req.body.emailQuery
   );
   res.status(result.success === false ? 403 : 200).json(result.users);
 };
@@ -15,7 +15,11 @@ const getProfile = async (req, res) => {
 };
 
 const editProfile = async (req, res) => {
-  const result = await userController.editProfile(req.params.id, req.body);
+  const result = await profileServices.editProfile(
+    req.params.id,
+    req.body,
+    req.userId
+  );
   return res.status(res.success === false ? 403 : 200).json(result);
 };
 

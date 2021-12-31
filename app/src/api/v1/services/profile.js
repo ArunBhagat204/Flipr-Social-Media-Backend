@@ -1,4 +1,5 @@
 const userModel = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const userSearch = async (username, email) => {
   try {
@@ -45,15 +46,25 @@ const getProfile = async (userId) => {
   }
 };
 
-const editProfile = async (userId, body) => {
+const editProfile = async (userId, body, authId) => {
   try {
     const user = await userModel.findById(userId).exec();
     if (!user) {
       throw new Error("User not found");
     }
-    if (req.userId != user.username) {
+    if (authId != user.username) {
       throw new Error("Cannot edit other user's profile");
     }
+    const updated = await userModel
+      .findOneAndUpdate(
+        { username: authId },
+        {
+          username: body.username,
+          email: body.email,
+          hash: bcrypt.hashSync(body.password, 10),
+        }
+      )
+      .exec();
     return {
       username: body.username,
       email: body.email,
