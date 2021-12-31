@@ -7,6 +7,11 @@ const dbConfig = require("./config/db_config");
 const router = require("./api/v1/routes/home");
 const { PORT, ENV } = require("./config/server_config").props;
 
+process.on("uncaughtException", (err) => {
+  console.error(`[UNCAUGHT EXCEPTION]: ${err}`);
+  process.exit(1);
+});
+
 const app = express();
 
 app.use(morgan("dev"));
