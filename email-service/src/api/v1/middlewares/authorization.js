@@ -1,11 +1,10 @@
 const serverConfig = require("../../../config/server_config");
 
 const authorization = (req, res, next) => {
+  const authToken = req.headers["authorization"].split(" ")[1];
   try {
-    if ("auth" in req.body) {
-      if (serverConfig.props.AUTH_KEY === req.body.auth) {
-        return next();
-      }
+    if (serverConfig.props.AUTH_KEY === authToken) {
+      return next();
     }
     res.status(500).json({
       success: false,
