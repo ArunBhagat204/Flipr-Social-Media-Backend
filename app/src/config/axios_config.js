@@ -4,7 +4,7 @@ const props = {
   headers: {
     "Content-Type": "application/json;charset=UTF-8",
     "Access-Control-Allow-Origin": "*",
-    authorization: `basic ${emailConfig.props.API_KEY}`,
+    authorization: `bearer ${emailConfig.props.API_KEY}`,
   },
 };
 
