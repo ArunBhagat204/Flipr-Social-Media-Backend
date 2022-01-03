@@ -6,6 +6,12 @@ const transporter = createTransporter.transporter(
   emailProps.PASS
 );
 
+/**
+ * Send email to specified address
+ * @param {Object} mail Object containing email address and content
+ * @returns Success/Failure response along with associated message
+ */
+
 const send = async (mail) => {
   try {
     const response = await transporter.sendMail({

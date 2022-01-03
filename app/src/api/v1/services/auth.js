@@ -3,6 +3,11 @@ const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
 const tokenManager = require("../helpers/token_manager");
 
+/**
+ * Authenticates a particular user
+ * @param {Request object} req Contains login credentials
+ * @returns Success/Failure response, along with a JWT token
+ */
 const login = async (req) => {
   const validationRes = validation.login(req);
   if (!validationRes.success) {

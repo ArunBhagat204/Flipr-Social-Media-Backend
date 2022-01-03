@@ -2,6 +2,12 @@ const tokenManager = require("../helpers/token_manager");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
 
+/**
+ * Change password/Initiate password reset process
+ * @param {string} token JWT verification token for password change
+ * @param {Request body} body Req body with the new password
+ * @returns Success/Failure response along with associated message
+ */
 const forgotPassword = (token, body) => {
   if (token) {
     const decoded = tokenManager.verify(token, process.env.JWT_TOKEN_SECRET);
@@ -68,6 +74,12 @@ const forgotPassword = (token, body) => {
   }
 };
 
+/**
+ * Delete account of specified user
+ * @param {string} userId Username of the account to be deleted
+ * @param {string} password Account Password for additional confirmation
+ * @returns
+ */
 const deleteAccount = async (userId, password) => {
   try {
     const res = await userModel.findOne({ username: userId }).exec();

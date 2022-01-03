@@ -1,5 +1,9 @@
 const userModel = require("../models/user");
-
+/**
+ * Validates new user registration information
+ * @param {Request Object} req Object containing new account credentials
+ * @returns Success/Failure response along with associated message
+ */
 const signup = async (req) => {
   if (!("username" in req && "password" in req && "email" in req)) {
     return { success: false, message: "Field missing" };
@@ -45,6 +49,11 @@ const signup = async (req) => {
   };
 };
 
+/**
+ * Validates login credentials
+ * @param {Request object} req Object containing login credentials
+ * @returns Success/Failure response along with associated message
+ */
 const login = (req) => {
   if (!("username" in req || "email" in req) || !("password" in req)) {
     return { success: false, message: "Field missing" };

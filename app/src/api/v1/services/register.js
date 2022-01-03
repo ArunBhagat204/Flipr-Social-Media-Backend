@@ -3,6 +3,11 @@ const userModel = require("../models/user");
 const tokenManager = require("../helpers/token_manager");
 const emailSender = require("../helpers/email_sender");
 
+/**
+ * Created a new account and initiates sending of verification email
+ * @param {Request Body} req Contains new-user registration info
+ * @returns Success/Failure response along with associated message
+ */
 const registerUser = async (req) => {
   const validationRes = await validation.signup(req);
   if (validationRes.success === false) {
@@ -42,6 +47,11 @@ const registerUser = async (req) => {
   };
 };
 
+/**
+ * Verifies email associated with a user account
+ * @param {string} token JWT token for verifying email
+ * @returns Success/Failure response along with associated message
+ */
 const emailVerify = (token) => {
   const decoded = tokenManager.verify(token, process.env.JWT_TOKEN_SECRET);
   if (decoded.verified === false) {
