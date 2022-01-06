@@ -17,6 +17,7 @@ const userSearch = async (username, email) => {
         },
         "username email email_verified"
       )
+      .limit(100)
       .exec();
     if (users.length > 100) {
       users = users.slice(0, 100);
