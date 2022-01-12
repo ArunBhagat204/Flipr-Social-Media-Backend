@@ -17,8 +17,4 @@ router.get("/", authorization, search, userController.userSearch);
 router.get("/:id", authorization, userController.getProfile);
 router.put("/:id", authorization, userController.editProfile);
 
-router.get("*", (req, res) => {
-  res.status(404).send("<h2>Page not found!<h2>");
-});
-
 module.exports = router;

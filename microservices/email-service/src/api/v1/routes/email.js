@@ -6,8 +6,4 @@ const router = express.Router();
 
 router.post("/send", authorization, emailController.send);
 
-router.get("*", (req, res) => {
-  res.status(404).send("<h2>Page not found!<h2>");
-});
-
 module.exports = router;
