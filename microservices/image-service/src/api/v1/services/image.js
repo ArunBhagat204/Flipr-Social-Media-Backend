@@ -37,6 +37,27 @@ const uploadImage = async (image) => {
   }
 };
 
-const deleteImage = async (imageId) => {};
+/**
+ * Deletes image from cloud storage
+ * @param {string} imageId URI of the image which is to be deleted
+ * @returns Success/Failure response along with associated message
+ */
+
+const deleteImage = async (imageId) => {
+  try {
+    const strArr = imageId.split("/");
+    const id = strArr[strArr.length - 1].split(".")[0];
+    const res = await cloudinary.uploader.destroy(id);
+    return {
+      success: true,
+      message: "Image deleted successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
 
 module.exports = { uploadImage, deleteImage };

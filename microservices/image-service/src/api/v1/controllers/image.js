@@ -6,7 +6,7 @@ const uploadImage = async (req, res) => {
 };
 
 const deleteImage = async (req, res) => {
-  const result = await imageService.deleteImage(req.body.imageId);
+  const result = await imageService.deleteImage(req.body.imageUrl);
   res.status(result.success === false ? 500 : 200).json(result);
 };
 
