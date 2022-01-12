@@ -1,5 +1,5 @@
 const createTransporter = require("../helpers/createTransporter");
-const emailProps = require("../../../config/email_config").props;
+const emailProps = require("../../../config/email.config").props;
 const transporter = createTransporter.transporter(
   emailProps.SERVICE,
   emailProps.USERID,

@@ -1,4 +1,4 @@
-const serverConfig = require("../../../config/server_config");
+const serverConfig = require("../../../config/server.config");
 
 const authorization = (req, res, next) => {
   const authToken = req.headers["authorization"].split(" ")[1];

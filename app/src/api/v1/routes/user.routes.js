@@ -1,8 +1,8 @@
 const express = require("express");
 const authorization = require("../middlewares/authorization");
 const search = require("../middlewares/search");
-const authController = require("../controllers/auth");
-const userController = require("../controllers/user");
+const authController = require("../controllers/auth.controller");
+const userController = require("../controllers/user.controller");
 
 const router = express.Router();
 

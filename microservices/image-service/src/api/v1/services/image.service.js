@@ -1,4 +1,4 @@
-const cloudinaryConfig = require("../../../config/cloudinary_config");
+const cloudinaryConfig = require("../../../config/cloudinary.config");
 const bufferHandler = require("../helpers/bufferHandler");
 
 const cloudinary = require("cloudinary");

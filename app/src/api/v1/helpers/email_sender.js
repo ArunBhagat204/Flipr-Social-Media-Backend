@@ -1,6 +1,6 @@
 const axios = require("axios");
-const axiosConfig = require("../../../config/axios_config");
-const emailService = require("../../../config/email_config");
+const axiosConfig = require("../../../config/axios.config");
+const emailService = require("../../../config/email.config");
 
 const send = (mail) => {
   axios

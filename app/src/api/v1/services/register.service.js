@@ -1,4 +1,4 @@
-const validation = require("./validation");
+const validation = require("./validation.service");
 const userModel = require("../models/user");
 const tokenManager = require("../helpers/token_manager");
 const emailSender = require("../helpers/email_sender");

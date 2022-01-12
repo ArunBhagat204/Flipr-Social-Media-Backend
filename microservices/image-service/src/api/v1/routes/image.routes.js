@@ -1,6 +1,7 @@
 const express = require("express");
 const authorization = require("../middlewares/authorization");
-const imageController = require("../controllers/image");
+const imageController = require("../controllers/image.controller");
+
 const multer = require("multer");
 const upload = multer();
 

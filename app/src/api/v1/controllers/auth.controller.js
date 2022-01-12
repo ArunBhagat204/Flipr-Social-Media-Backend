@@ -1,6 +1,6 @@
-const register = require("../services/register");
-const accountServices = require("../services/account");
-const auth = require("../services/auth");
+const register = require("../services/register.service");
+const accountServices = require("../services/account.service");
+const auth = require("../services/auth.service");
 
 const signup = async (req, res) => {
   const result = await register.registerUser(req.body);

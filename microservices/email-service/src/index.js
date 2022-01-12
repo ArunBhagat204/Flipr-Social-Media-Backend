@@ -1,8 +1,8 @@
 require("dotenv").config();
 const morgan = require("morgan");
 const express = require("express");
-const router = require("./api/v1/routes/home");
-const { PORT, ENV } = require("./config/server_config").props;
+const router = require("./api/v1/routes/home.routes");
+const { PORT, ENV } = require("./config/server.config").props;
 
 process.on("uncaughtException", (err) => {
   console.error(`[UNCAUGHT EXCEPTION]: ${err}`);

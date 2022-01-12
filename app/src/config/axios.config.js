@@ -1,4 +1,4 @@
-const emailConfig = require("./email_config");
+const emailConfig = require("./email.config");
 
 const props = {
   headers: {

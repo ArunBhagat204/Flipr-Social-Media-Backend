@@ -3,9 +3,9 @@ const morgan = require("morgan");
 const express = require("express");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const dbConfig = require("./config/db_config");
-const router = require("./api/v1/routes/home");
-const { PORT, ENV } = require("./config/server_config").props;
+const dbConfig = require("./config/db.config");
+const router = require("./api/v1/routes/home.routes");
+const { PORT, ENV } = require("./config/server.config").props;
 
 process.on("uncaughtException", (err) => {
   console.error(`[UNCAUGHT EXCEPTION]: ${err}`);

@@ -1,5 +1,5 @@
-const accountServices = require("../services/account");
-const profileServices = require("../services/profile");
+const accountServices = require("../services/account.service");
+const profileServices = require("../services/profile.service");
 
 const userSearch = async (req, res) => {
   const result = await profileServices.userSearch(

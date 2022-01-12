@@ -1,4 +1,4 @@
-const imageService = require("../services/image");
+const imageService = require("../services/image.service");
 
 const uploadImage = async (req, res) => {
   const result = await imageService.uploadImage(req.file);

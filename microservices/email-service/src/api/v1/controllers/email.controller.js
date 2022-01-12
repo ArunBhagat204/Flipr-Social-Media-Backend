@@ -1,4 +1,4 @@
-const sendService = require("../services/send");
+const sendService = require("../services/send.service");
 
 const send = async (req, res) => {
   const result = await sendService.send(req.body);
