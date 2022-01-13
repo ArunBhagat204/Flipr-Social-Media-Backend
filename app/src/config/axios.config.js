@@ -1,11 +1,11 @@
-const emailConfig = require("./email.config");
-
-const props = {
-  headers: {
-    "Content-Type": "application/json;charset=UTF-8",
-    "Access-Control-Allow-Origin": "*",
-    authorization: `bearer ${emailConfig.props.API_KEY}`,
-  },
+const props = (authKey) => {
+  return {
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+      authorization: `bearer ${authKey}`,
+    },
+  };
 };
 
 module.exports = { props };

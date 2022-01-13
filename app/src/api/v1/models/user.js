@@ -21,6 +21,11 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    profile_pic: {
+      type: String,
+      required: true,
+      default: "NaN",
+    },
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },

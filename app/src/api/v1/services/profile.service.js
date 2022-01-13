@@ -1,4 +1,5 @@
 const userModel = require("../models/user");
+const imageManager = require("../helpers/image_manager");
 const bcrypt = require("bcrypt");
 
 /**
@@ -63,7 +64,7 @@ const getProfile = async (userId) => {
  * @param {string} userId ID of the user whose profile is to be updated
  * @param {Request body} body Contains the updated profile info
  * @param {string} authId Username of the logged in user
- * @returns
+ * @returns Success/Failure response along with associated message
  */
 const editProfile = async (userId, body, authId) => {
   try {
@@ -97,4 +98,70 @@ const editProfile = async (userId, body, authId) => {
   }
 };
 
-module.exports = { userSearch, getProfile, editProfile };
+/**
+ * Uploads a profile picture for the logged in user
+ * @param {Buffer object} image Object containing the image buffer
+ * @param {string} userId Username of the logged in user
+ * @returns Success/Failure response along with associated message
+ */
+
+const uploadPfp = async (image, userId) => {
+  try {
+    const uploadRes = await imageManager.uploadImage(image);
+    if (!uploadRes.success) {
+      throw new Error(`${uploadRes.message}`);
+    }
+    const updated = await userModel
+      .findOneAndUpdate(
+        { username: userId },
+        {
+          profile_pic: uploadRes.message,
+        }
+      )
+      .exec();
+    return {
+      success: true,
+      message: "Profile picture uploaded successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
+/**
+ * Removed the profile picture of the logged in user
+ * @param {string} userId Username of the logged in user
+ * @returns Success/Failure response along with associated message
+ */
+
+const deletePfp = async (userId) => {
+  try {
+    const user = await userModel.findOne({ username: userId });
+    const deleteRes = await imageManager.deleteImage(user.profile_pic);
+    if (!deleteRes.success) {
+      throw new Error(`${deleteRes.message}`);
+    }
+    const updated = await userModel
+      .findOneAndUpdate(
+        { username: userId },
+        {
+          profile_pic: "NaN",
+        }
+      )
+      .exec();
+    return {
+      success: true,
+      message: "Profile picture removed successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
+module.exports = { userSearch, getProfile, editProfile, uploadPfp, deletePfp };

@@ -4,7 +4,11 @@ const emailService = require("../../../config/email.config");
 
 const send = (mail) => {
   axios
-    .post(emailService.props.SEND_ROUTE, mail, axiosConfig.props)
+    .post(
+      emailService.props.SEND_ROUTE,
+      mail,
+      axiosConfig.props(emailService.props.API_KEY)
+    )
     .then((res) => {
       console.log("[EMAIL SENDER]: ", res.data);
     })

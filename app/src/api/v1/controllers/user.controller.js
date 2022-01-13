@@ -23,6 +23,16 @@ const editProfile = async (req, res) => {
   return res.status(res.success === false ? 403 : 200).json(result);
 };
 
+const uploadPfp = async (req, res) => {
+  const result = await profileServices.uploadPfp(req.file, req.userId);
+  return res.status(res.success === false ? 403 : 200).json(result);
+};
+
+const deletePfp = async (req, res) => {
+  const result = await profileServices.deletePfp(req.userId);
+  return res.status(res.success === false ? 403 : 200).json(result);
+};
+
 const deleteAccount = async (req, res) => {
   const result = await accountServices.deleteAccount(
     req.userId,
@@ -35,4 +45,11 @@ const deleteAccount = async (req, res) => {
   }
 };
 
-module.exports = { deleteAccount, getProfile, editProfile, userSearch };
+module.exports = {
+  deleteAccount,
+  getProfile,
+  editProfile,
+  userSearch,
+  uploadPfp,
+  deletePfp,
+};

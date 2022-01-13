@@ -11,6 +11,7 @@ cloudinary.config(cloudinaryConfig.props);
  */
 
 const uploadImage = async (image) => {
+  const imageData = new Uint8Array(image.buffer.data);
   try {
     const upload = async (buffer) => {
       return new Promise((resolve, reject) => {
@@ -21,7 +22,7 @@ const uploadImage = async (image) => {
             resolve(res);
           }
         });
-        bufferHandler.bufferToStream(image.buffer).pipe(stream);
+        bufferHandler.bufferToStream(imageData).pipe(stream);
       });
     };
     const res = await upload(image.buffer);
