@@ -50,7 +50,8 @@ const userSchema = mongoose.Schema(
     ],
     friend_requests: [
       {
-        type: String,
+        from: String,
+        recievedAt: String,
       },
     ],
     following: [

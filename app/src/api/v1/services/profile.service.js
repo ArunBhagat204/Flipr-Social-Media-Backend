@@ -50,6 +50,11 @@ const getProfile = async (userId) => {
       username: user.username,
       email: user.email,
       email_verfied: user.email_verified,
+      city: user.city,
+      organization: user.organization,
+      accepting_friends: user.accepting_friends,
+      followers: user.followers,
+      following: user.following,
     };
   } catch (err) {
     return {

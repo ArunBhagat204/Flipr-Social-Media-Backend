@@ -3,6 +3,7 @@ const authorization = require("../middlewares/authorization");
 const search = require("../middlewares/search");
 const authController = require("../controllers/auth.controller");
 const userController = require("../controllers/user.controller");
+const friendRoutes = require("../routes/friend.routes");
 
 const multer = require("multer");
 const upload = multer();
@@ -16,10 +17,6 @@ router.post("/logout", authorization, authController.logout);
 router.post("/forgot_password", authController.forgotPassword);
 router.post("/delete_account", authorization, userController.deleteAccount);
 
-router.get("/", authorization, search, userController.userSearch);
-router.get("/:id", authorization, userController.getProfile);
-router.put("/:id", authorization, userController.editProfile);
-
 router.post(
   "/pfp",
   authorization,
@@ -27,5 +24,11 @@ router.post(
   userController.uploadPfp
 );
 router.delete("/pfp", authorization, userController.deletePfp);
+
+router.use("/friends", friendRoutes);
+
+router.get("/", authorization, search, userController.userSearch);
+router.get("/:id", authorization, userController.getProfile);
+router.put("/:id", authorization, userController.editProfile);
 
 module.exports = router;
