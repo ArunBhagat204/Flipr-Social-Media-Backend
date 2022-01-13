@@ -25,7 +25,7 @@ const deleteImage = async (link) => {
   try {
     const res = await axios.delete(
       imageService.props.SERVICE_ROUTE,
-      { imageUrl: image.buffer },
+      { imageUrl: link },
       axiosConfig.props(imageService.props.API_KEY)
     );
     return {

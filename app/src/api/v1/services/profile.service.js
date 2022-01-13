@@ -82,6 +82,9 @@ const editProfile = async (userId, body, authId) => {
           username: body.username,
           email: body.email,
           hash: bcrypt.hashSync(body.password, 10),
+          city: body.city,
+          organization: body.organization,
+          accepting_friends: body.accepting_friends,
         }
       )
       .exec();
@@ -89,6 +92,9 @@ const editProfile = async (userId, body, authId) => {
       username: body.username,
       email: body.email,
       password: body.password,
+      city: body.city,
+      organization: body.organization,
+      accepting_friends: body.accepting_friends,
     };
   } catch (err) {
     return {
@@ -148,7 +154,7 @@ const deletePfp = async (userId) => {
       .findOneAndUpdate(
         { username: userId },
         {
-          profile_pic: "NaN",
+          profile_pic: null,
         }
       )
       .exec();

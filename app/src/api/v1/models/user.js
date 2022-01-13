@@ -21,11 +21,48 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    accepting_friends: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
     profile_pic: {
       type: String,
-      required: true,
-      default: "NaN",
+      default: null,
     },
+    city: {
+      type: String,
+      default: null,
+    },
+    organization: {
+      type: String,
+      default: null,
+    },
+    blocks: [
+      {
+        type: String,
+      },
+    ],
+    friends: [
+      {
+        type: String,
+      },
+    ],
+    friend_requests: [
+      {
+        type: String,
+      },
+    ],
+    following: [
+      {
+        type: String,
+      },
+    ],
+    followers: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
