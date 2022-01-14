@@ -1,4 +1,5 @@
 const userModel = require("../models/user");
+const checkBlock = require("../helpers/check_block");
 const imageManager = require("../helpers/image_manager");
 const bcrypt = require("bcrypt");
 
@@ -40,11 +41,15 @@ const userSearch = async (username, email) => {
  * @param {string} userId ID of the user whose profile is requested
  * @returns Success/Failure response along with associated message
  */
-const getProfile = async (userId) => {
+const getProfile = async (userId, curUser) => {
   try {
     const user = await userModel.findById(userId).exec();
     if (!user) {
       throw new Error("User not found");
+    }
+    const isBlocked = await checkBlock(user.username, curUser);
+    if (isBlocked) {
+      throw new Error("User has blocked you");
     }
     return {
       username: user.username,

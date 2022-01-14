@@ -10,7 +10,7 @@ const userSearch = async (req, res) => {
 };
 
 const getProfile = async (req, res) => {
-  const result = await profileServices.getProfile(req.params.id);
+  const result = await profileServices.getProfile(req.params.id, req.userId);
   return res.status(res.success === false ? 403 : 200).json(result);
 };
 

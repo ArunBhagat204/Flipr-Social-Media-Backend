@@ -67,6 +67,16 @@ const deleteRequest = async (req, res) => {
   return res.status(result.success === false ? 500 : 200).json(result);
 };
 
+const blockUser = async (req, res) => {
+  const result = await friendService.blockUser(req.userId, req.body.name);
+  return res.status(result.success === false ? 500 : 200).json(result);
+};
+
+const unblockUser = async (req, res) => {
+  const result = await friendService.unblockUser(req.userId, req.body.name);
+  return res.status(result.success === false ? 500 : 200).json(result);
+};
+
 module.exports = {
   getFriends,
   sendRequest,
@@ -77,4 +87,6 @@ module.exports = {
   getRequests,
   acceptRequest,
   deleteRequest,
+  blockUser,
+  unblockUser,
 };

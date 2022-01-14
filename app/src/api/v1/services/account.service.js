@@ -1,4 +1,5 @@
 const tokenManager = require("../helpers/token_manager");
+const friendService = require("../services/friend.service");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
 
@@ -93,11 +94,12 @@ const deleteAccount = async (userId, password) => {
       message: err.message,
     };
   }
-  userModel.findOneAndDelete({ username: userId }, (err, res) => {
-    if (err) {
-      console.log(err);
-    }
+  const user = await userModel.findOne({ username: userId });
+  user.followers.map(async (itr) => {
+    await friendService.removeFriend(itr, userId);
+    await friendService.unfollowUser(itr, userId);
   });
+  await userModel.findOneAndDelete({ username: userId });
   return {
     success: true,
     message: "Account deleted successfully",

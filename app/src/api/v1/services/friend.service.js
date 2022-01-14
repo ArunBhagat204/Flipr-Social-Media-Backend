@@ -1,4 +1,5 @@
 const userModel = require("../models/user");
+const checkBlock = require("../helpers/check_block");
 
 const getFriends = async (curUser) => {
   try {
@@ -17,6 +18,10 @@ const getFriends = async (curUser) => {
 
 const sendRequest = async (curUser, targetUser) => {
   try {
+    const isBlocked = await checkBlock(targetUser, curUser);
+    if (isBlocked) {
+      throw new Error("User has blocked you");
+    }
     const newRequest = {
       from: curUser,
       recievedAt: new Date().toLocaleString(),
@@ -94,6 +99,10 @@ const getFollowers = async (curUser) => {
 
 const followUser = async (curUser, targetUser) => {
   try {
+    const isBlocked = await checkBlock(targetUser, curUser);
+    if (isBlocked) {
+      throw new Error("User has blocked you");
+    }
     const target = await userModel.findOne({ username: targetUser });
     if (!target) {
       throw new Error("No such user exists");
@@ -247,6 +256,56 @@ const deleteRequest = async (curUser, targetUser) => {
   }
 };
 
+const blockUser = async (curUser, targetUser) => {
+  try {
+    const isBlocked = await checkBlock(curUser, targetUser);
+    if (isBlocked) {
+      throw new Error("User already blocked");
+    }
+    await removeFriend(curUser, targetUser);
+    await unfollowUser(curUser, targetUser);
+    await deleteRequest(curUser, targetUser);
+    await removeFriend(targetUser, curUser);
+    await unfollowUser(targetUser, curUser);
+    await deleteRequest(targetUser, curUser);
+    await userModel.findOneAndUpdate(
+      { username: curUser },
+      { $push: { blocks: targetUser } }
+    );
+    return {
+      success: true,
+      message: "User blocked successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
+const unblockUser = async (curUser, targetUser) => {
+  try {
+    const isBlocked = await checkBlock(curUser, targetUser);
+    if (!isBlocked) {
+      throw new Error("User not blocked");
+    }
+    await userModel.findOneAndUpdate(
+      { username: curUser },
+      { $pull: { blocks: targetUser } }
+    );
+    return {
+      success: true,
+      message: "User unblocked successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
 module.exports = {
   getFriends,
   sendRequest,
@@ -257,4 +316,6 @@ module.exports = {
   getRequests,
   acceptRequest,
   deleteRequest,
+  blockUser,
+  unblockUser,
 };
