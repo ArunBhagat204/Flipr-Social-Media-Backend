@@ -16,6 +16,7 @@ const forgotPassword = (token, body) => {
       return {
         success: false,
         message: "Invalid password change token",
+        statusCode: 403,
       };
     }
     try {
@@ -34,6 +35,7 @@ const forgotPassword = (token, body) => {
       return {
         success: false,
         message: err.message,
+        statusCode: 500,
       };
     }
     return {
@@ -66,6 +68,7 @@ const forgotPassword = (token, body) => {
       return {
         success: false,
         message: err.message,
+        statusCode: 500,
       };
     }
     return {
@@ -92,6 +95,7 @@ const deleteAccount = async (userId, password) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 401,
     };
   }
   const user = await userModel.findOne({ username: userId });

@@ -17,6 +17,7 @@ const registerUser = async (req) => {
     return {
       success: false,
       message: "Credentials already in use",
+      statusCode: 409,
     };
   }
   if (validationRes.success === false) {
@@ -48,6 +49,7 @@ const registerUser = async (req) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
   return {
@@ -65,7 +67,7 @@ const emailVerify = (token) => {
   const decoded = tokenManager.verify(token, process.env.JWT_TOKEN_SECRET);
   if (decoded.verified === false) {
     return {
-      status: 401,
+      statusCode: 401,
       message: `Email verification failed - ${decoded.content}`,
     };
   }
@@ -92,12 +94,12 @@ const emailVerify = (token) => {
     });
   } catch (err) {
     return {
-      status: 500,
+      statusCode: 500,
       message: `Verification failed - ${err.message}`,
     };
   }
   return {
-    status: 200,
+    statusCode: 200,
     message: "Email verification successful!",
   };
 };

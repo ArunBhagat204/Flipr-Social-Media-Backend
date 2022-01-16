@@ -8,28 +8,44 @@ const tokenManager = require("../helpers/token_manager");
  * @returns Success/Failure response, along with a JWT token
  */
 const login = async (req) => {
-  const credMatch = (req, db) => {
-    const match = bcrypt.compareSync(req.password, db.hash);
-    if (!match) {
-      throw new Error("Incorrect Password");
-    }
-  };
   try {
+    const credMatch = (req, db) => {
+      const match = bcrypt.compareSync(req.password, db.hash);
+      if (!match) {
+        return {
+          success: false,
+          message: "Incorrect Password",
+          statusCode: 401,
+        };
+      }
+    };
     if ("username" in req) {
       const user = await userModel.findOne({ username: req.username }).exec();
       if (!user) {
-        throw new Error("No such username exists");
+        return {
+          success: false,
+          message: "No such username exists",
+          statusCode: 401,
+        };
       }
       credMatch(req, user);
     } else {
       const user = await userModel.findOne({ email: req.email }).exec();
       if (!user) {
-        throw new Error("No such email exists");
+        return {
+          success: false,
+          message: "No such email exists",
+          statusCode: 401,
+        };
       }
       credMatch(req, user);
     }
   } catch (err) {
-    return { success: false, message: err.message };
+    return {
+      success: false,
+      statusCode: 500,
+      message: err.message,
+    };
   }
   const loginToken = tokenManager.newToken(
     { username: req.username },

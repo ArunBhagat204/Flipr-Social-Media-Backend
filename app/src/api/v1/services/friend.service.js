@@ -18,6 +18,7 @@ const getFriends = async (curUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -33,7 +34,11 @@ const sendRequest = async (curUser, targetUser) => {
   try {
     const isBlocked = await checkBlock(targetUser, curUser);
     if (isBlocked) {
-      throw new Error("User has blocked you");
+      return {
+        success: false,
+        message: "User has blocked you",
+        statusCode: 403,
+      };
     }
     const newRequest = {
       from: curUser,
@@ -41,11 +46,19 @@ const sendRequest = async (curUser, targetUser) => {
     };
     const recipient = await userModel.findOne({ username: targetUser });
     if (recipient.accepting_friends === false) {
-      throw new Error("User not accepting new friend requests");
+      return {
+        success: false,
+        message: "User not accepting new friend requests",
+        statusCode: 403,
+      };
     }
     recipient.friend_requests.map((fr) => {
       if (fr.from === curUser) {
-        throw new Error("Request already exists");
+        return {
+          success: false,
+          message: "Request already exists",
+          statusCode: 409,
+        };
       }
     });
     await userModel.findOneAndUpdate(
@@ -60,6 +73,7 @@ const sendRequest = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -81,7 +95,11 @@ const removeFriend = async (curUser, targetUser) => {
       }
     });
     if (!exists) {
-      throw new Error("No such friend found");
+      return {
+        success: false,
+        message: "No such friend found",
+        statusCode: 400,
+      };
     }
     await userModel.findOneAndUpdate(
       { username: curUser },
@@ -95,6 +113,7 @@ const removeFriend = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -119,6 +138,7 @@ const getFollowers = async (curUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -134,16 +154,28 @@ const followUser = async (curUser, targetUser) => {
   try {
     const isBlocked = await checkBlock(targetUser, curUser);
     if (isBlocked) {
-      throw new Error("User has blocked you");
+      return {
+        success: false,
+        message: "User has blocked you",
+        statusCode: 403,
+      };
     }
     const target = await userModel.findOne({ username: targetUser });
     if (!target) {
-      throw new Error("No such user exists");
+      return {
+        success: false,
+        message: "No such user exists",
+        statusCode: 400,
+      };
     }
     const user = await userModel.findOne({ username: curUser });
     user.following.map((followed) => {
       if (followed === targetUser) {
-        throw new Error("User already being followed");
+        return {
+          success: false,
+          message: "User already being followed",
+          statusCode: 409,
+        };
       }
     });
     await userModel.findOneAndUpdate(
@@ -166,6 +198,7 @@ const followUser = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -187,7 +220,11 @@ const unfollowUser = async (curUser, targetUser) => {
       }
     });
     if (!exists) {
-      throw new Error("No such follower found");
+      return {
+        success: false,
+        message: "No such follower found",
+        statusCode: 400,
+      };
     }
     await userModel.findOneAndUpdate(
       { username: curUser },
@@ -205,6 +242,7 @@ const unfollowUser = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -228,6 +266,7 @@ const getRequests = async (curUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -249,7 +288,11 @@ const acceptRequest = async (curUser, targetUser) => {
       }
     });
     if (!exists) {
-      throw new Error("No such request exists");
+      return {
+        success: false,
+        message: "No such request exists",
+        statusCode: 400,
+      };
     }
     await userModel.findOneAndUpdate(
       { username: curUser },
@@ -277,6 +320,7 @@ const acceptRequest = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -298,7 +342,11 @@ const deleteRequest = async (curUser, targetUser) => {
       }
     });
     if (!exists) {
-      throw new Error("No such request exists");
+      return {
+        success: false,
+        message: "No such request exists",
+        statusCode: 400,
+      };
     }
     await userModel.findOneAndUpdate(
       { username: curUser },
@@ -312,6 +360,7 @@ const deleteRequest = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -327,7 +376,11 @@ const blockUser = async (curUser, targetUser) => {
   try {
     const isBlocked = await checkBlock(curUser, targetUser);
     if (isBlocked) {
-      throw new Error("User already blocked");
+      return {
+        success: false,
+        message: err.message,
+        statusCode: 409,
+      };
     }
     await removeFriend(curUser, targetUser);
     await unfollowUser(curUser, targetUser);
@@ -347,6 +400,7 @@ const blockUser = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -362,7 +416,11 @@ const unblockUser = async (curUser, targetUser) => {
   try {
     const isBlocked = await checkBlock(curUser, targetUser);
     if (!isBlocked) {
-      throw new Error("User not blocked");
+      return {
+        success: false,
+        message: "User is not blocked",
+        statusCode: 400,
+      };
     }
     await userModel.findOneAndUpdate(
       { username: curUser },
@@ -376,6 +434,7 @@ const unblockUser = async (curUser, targetUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -424,6 +483,7 @@ const suggestFriends = async (curUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };

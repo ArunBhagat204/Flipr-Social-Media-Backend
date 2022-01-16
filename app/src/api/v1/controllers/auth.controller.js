@@ -1,15 +1,20 @@
 const register = require("../services/register.service");
 const accountServices = require("../services/account.service");
 const auth = require("../services/auth.service");
+const errorHandler = require("../helpers/error_handler");
 
 const signup = async (req, res) => {
   const result = await register.registerUser(req.body);
-  res.status(result.success === false ? 500 : 200).json(result);
+  if (result.success === false) {
+    errorHandler(new Error(result.message), res, result.statusCode);
+  } else {
+    res.status(200).json(result);
+  }
 };
 
 const email_verify = (req, res) => {
   const result = register.emailVerify(req.query.token);
-  res.status(result.status).send(`<h4>${result.message}</h4>`);
+  res.status(result.statusCode).send(`<h4>${result.message}</h4>`);
 };
 
 const login = async (req, res) => {
@@ -34,7 +39,11 @@ const forgotPassword = async (req, res) => {
     req.query.token,
     req.body
   );
-  res.status(result.success === false ? 401 : 200).json(result);
+  if (result.success === false) {
+    errorHandler(new Error(result.message), res, result.statusCode);
+  } else {
+    res.status(200).json(result);
+  }
 };
 
 module.exports = { signup, email_verify, login, logout, forgotPassword };

@@ -35,6 +35,7 @@ const userSearch = async (curUser, queries) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -49,11 +50,19 @@ const getProfile = async (userId, curUser) => {
   try {
     const user = await userModel.findById(userId).exec();
     if (!user) {
-      throw new Error("User not found");
+      return {
+        success: false,
+        message: "User not found",
+        statusCode: 400,
+      };
     }
     const isBlocked = await checkBlock(user.username, curUser);
     if (isBlocked) {
-      throw new Error("User has blocked you");
+      return {
+        success: false,
+        message: "User has blocked you",
+        statusCode: 403,
+      };
     }
     return {
       username: user.username,
@@ -69,6 +78,7 @@ const getProfile = async (userId, curUser) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -85,10 +95,18 @@ const editProfile = async (userId, body, authId) => {
   try {
     const user = await userModel.findById(userId).exec();
     if (!user) {
-      throw new Error("User not found");
+      return {
+        success: false,
+        message: "User not found",
+        statusCode: 400,
+      };
     }
     if (authId != user.username) {
-      throw new Error("Cannot edit other user's profile");
+      return {
+        success: false,
+        message: "Cannot edit other user's profile",
+        statusCode: 403,
+      };
     }
     const updated = await userModel
       .findOneAndUpdate(
@@ -115,6 +133,7 @@ const editProfile = async (userId, body, authId) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -150,6 +169,7 @@ const uploadPfp = async (image, userId) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
@@ -183,6 +203,7 @@ const deletePfp = async (userId) => {
     return {
       success: false,
       message: err.message,
+      statusCode: 500,
     };
   }
 };
