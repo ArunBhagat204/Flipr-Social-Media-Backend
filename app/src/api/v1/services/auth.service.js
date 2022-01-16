@@ -1,4 +1,3 @@
-const validation = require("./validation.service");
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
 const tokenManager = require("../helpers/token_manager");
@@ -9,10 +8,6 @@ const tokenManager = require("../helpers/token_manager");
  * @returns Success/Failure response, along with a JWT token
  */
 const login = async (req) => {
-  const validationRes = validation.login(req);
-  if (!validationRes.success) {
-    return { success: false, message: validationRes.message };
-  }
   const credMatch = (req, db) => {
     const match = bcrypt.compareSync(req.password, db.hash);
     if (!match) {

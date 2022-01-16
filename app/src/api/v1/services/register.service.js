@@ -1,4 +1,3 @@
-const validation = require("./validation.service");
 const userModel = require("../models/user");
 const tokenManager = require("../helpers/token_manager");
 const emailSender = require("../helpers/email_sender");
@@ -9,7 +8,17 @@ const emailSender = require("../helpers/email_sender");
  * @returns Success/Failure response along with associated message
  */
 const registerUser = async (req) => {
-  const validationRes = await validation.signup(req);
+  const userCheck = await userModel.exists({ username: req.username });
+  const emailCheck = await userModel.exists({
+    email: req.email,
+    email_verified: true,
+  });
+  if (userCheck || emailCheck) {
+    return {
+      success: false,
+      message: "Credentials already in use",
+    };
+  }
   if (validationRes.success === false) {
     return validationRes;
   }
