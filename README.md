@@ -14,15 +14,19 @@ Complete documentation for the API endpoints present in the applications can be 
 
 - [Social-Media App DOCS](https://documenter.getpostman.com/view/17937111/UVRHhiCv)
 - [Email Microservice DOCS](https://documenter.getpostman.com/view/17937111/UVRHhiCo)
+- [Image Microservice DOCS](https://documenter.getpostman.com/view/17937111/UVXjLbt8)
 
 ## Features
 
-_Upon the completion of Module 1_
+_Upon the completion of Module 2_
 
-- Create new account with hashed DB passwords
-- Email verification for user accounts
-- Login functionality with JWT tokens
-- Token storage and retrieval from cookies
-- Logout, Forgot Password and Delete Account feature
-- Feature to search for users, view profiles and edit your profile after authorization
-- Separate email sending microservice
+- User management and Email microservice features present in Module 1
+- Detailed user profile with more info and profile picture
+- Follow and unfollow user feature
+- User blocking/unblocking feature
+- Send, Accept, Reject Friend requests
+- Suggest friends feature using common city, organization or mutual connections
+- Fetch all friends and friend requests
+- Remove user as friend as well as hide profile from blocked users in search results
+- Separate image management microservice
+- Upload and delete image from cloud storage

@@ -79,7 +79,7 @@ const forgotPassword = (token, body) => {
  * Delete account of specified user
  * @param {string} userId Username of the account to be deleted
  * @param {string} password Account Password for additional confirmation
- * @returns
+ * @returns Success/Failure response along with associated message
  */
 const deleteAccount = async (userId, password) => {
   try {
