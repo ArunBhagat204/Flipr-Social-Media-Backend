@@ -2,10 +2,7 @@ const accountServices = require("../services/account.service");
 const profileServices = require("../services/profile.service");
 
 const userSearch = async (req, res) => {
-  const result = await profileServices.userSearch(
-    req.body.userQuery,
-    req.body.emailQuery
-  );
+  const result = await profileServices.userSearch(req.userId, req.body.queries);
   res.status(result.success === false ? 403 : 200).json(result.users);
 };
 

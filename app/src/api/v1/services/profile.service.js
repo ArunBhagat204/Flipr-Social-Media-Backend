@@ -1,6 +1,7 @@
 const userModel = require("../models/user");
 const checkBlock = require("../helpers/check_block");
 const imageManager = require("../helpers/image_manager");
+const checkBlock = require("../helpers/check_block");
 const bcrypt = require("bcrypt");
 
 /**
@@ -9,24 +10,26 @@ const bcrypt = require("bcrypt");
  * @param {string} email Email to be searched for
  * @returns Success/Failure response along with associated message
  */
-const userSearch = async (username, email) => {
+const userSearch = async (curUser, queries) => {
   try {
     let users = await userModel
       .find(
         {
-          username: { $regex: username },
-          email: { $regex: email },
+          username: { $regex: queries.userQuery },
+          email: { $regex: queries.emailQuery },
+          city: { $regex: queries.cityQuery },
+          organization: { $regex: queries.orgQuery },
         },
-        "username email email_verified"
+        "username email email_verified profile_pic"
       )
       .limit(100)
       .exec();
-    if (users.length > 100) {
-      users = users.slice(0, 100);
-    }
+    const results = users.filter(
+      async (user) => await checkBlock(user.username, curUser)
+    );
     return {
       success: true,
-      users: users,
+      users: results,
     };
   } catch (err) {
     return {
