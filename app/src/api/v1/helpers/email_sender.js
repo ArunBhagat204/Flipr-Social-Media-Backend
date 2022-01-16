@@ -2,6 +2,11 @@ const axios = require("axios");
 const axiosConfig = require("../../../config/axios.config");
 const emailService = require("../../../config/email.config");
 
+/**
+ * Invokes the email microservice to send an email
+ * @param {Object} mail Contains the email content
+ */
+
 const send = (mail) => {
   axios
     .post(

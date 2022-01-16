@@ -2,6 +2,12 @@ const axios = require("axios");
 const axiosConfig = require("../../../config/axios.config");
 const imageService = require("../../../config/image.config");
 
+/**
+ * Invokes the image microservice to upload an image
+ * @param {Object} image Contains image buffer and metadata
+ * @returns URL of the uploaded image
+ */
+
 const uploadImage = async (image) => {
   try {
     const res = await axios.post(
@@ -20,6 +26,12 @@ const uploadImage = async (image) => {
     };
   }
 };
+
+/**
+ * Invokes the image microservice to delete an image
+ * @param {String} link URL of the uploaded image
+ * @returns Success/Faiure response with appropriate message
+ */
 
 const deleteImage = async (link) => {
   try {

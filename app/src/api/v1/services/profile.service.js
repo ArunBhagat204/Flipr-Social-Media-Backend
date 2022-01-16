@@ -5,10 +5,11 @@ const bcrypt = require("bcrypt");
 
 /**
  * Searches for a user account according to username and email
- * @param {string} username Username to be searched for
- * @param {string} email Email to be searched for
+ * @param {string} curUser Username of the logged in user
+ * @param {Object} queries Search queries in regex format
  * @returns Success/Failure response along with associated message
  */
+
 const userSearch = async (curUser, queries) => {
   try {
     let users = await userModel
@@ -43,6 +44,7 @@ const userSearch = async (curUser, queries) => {
  * @param {string} userId ID of the user whose profile is requested
  * @returns Success/Failure response along with associated message
  */
+
 const getProfile = async (userId, curUser) => {
   try {
     const user = await userModel.findById(userId).exec();
@@ -78,6 +80,7 @@ const getProfile = async (userId, curUser) => {
  * @param {string} authId Username of the logged in user
  * @returns Success/Failure response along with associated message
  */
+
 const editProfile = async (userId, body, authId) => {
   try {
     const user = await userModel.findById(userId).exec();

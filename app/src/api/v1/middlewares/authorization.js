@@ -1,5 +1,13 @@
 const tokenManager = require("../helpers/token_manager");
 
+/**
+ * Authorizes the application user
+ * @param {Object} req Request object of the HTTP request
+ * @param {Object} res Response object of the HTTP request
+ * @param {Function} next Function to invoke the next middleware
+ * @returns Failure message in case of error
+ */
+
 const authorization = (req, res, next) => {
   let token;
   if (req.cookies.login_token) {

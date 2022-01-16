@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const dbConfig = require("../../../config/db.config");
 
+/**
+ * Connects to cloud database using credentials in config file
+ */
+
 const dbConnect = () => {
   mongoose.connect(dbConfig.dbURI, null, (err) => {
     if (err) {

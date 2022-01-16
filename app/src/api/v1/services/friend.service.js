@@ -1,6 +1,12 @@
 const userModel = require("../models/user");
 const checkBlock = require("../helpers/check_block");
 
+/**
+ * Fetches the friend list of a particular user
+ * @param {String} curUser Username of the logged in user
+ * @returns Success/Failure message along with appropriate content
+ */
+
 const getFriends = async (curUser) => {
   try {
     const user = await userModel.findOne({ username: curUser });
@@ -15,6 +21,13 @@ const getFriends = async (curUser) => {
     };
   }
 };
+
+/**
+ * Sends a friend request to a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the target user
+ * @returns Success/Failure message along with appropriate message
+ */
 
 const sendRequest = async (curUser, targetUser) => {
   try {
@@ -51,6 +64,13 @@ const sendRequest = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Removes a user as friend
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the target user
+ * @returns Success/Failure message along with appropriate message
+ */
+
 const removeFriend = async (curUser, targetUser) => {
   try {
     const user = await userModel.findOne({ username: curUser });
@@ -79,6 +99,12 @@ const removeFriend = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Fetches the followers of the logged in user
+ * @param {String} curUser Username of the logged in user
+ * @returns Success/Failure message along with appropriate content
+ */
+
 const getFollowers = async (curUser) => {
   try {
     const user = await userModel.findOne({ username: curUser });
@@ -96,6 +122,13 @@ const getFollowers = async (curUser) => {
     };
   }
 };
+
+/**
+ * Follows a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the target user
+ * @returns Success/Failure message along with appropriate message
+ */
 
 const followUser = async (curUser, targetUser) => {
   try {
@@ -137,6 +170,13 @@ const followUser = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Unfollows a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the target user
+ * @returns Success/Failure message along with appropriate message
+ */
+
 const unfollowUser = async (curUser, targetUser) => {
   try {
     const user = await userModel.findOne({ username: curUser });
@@ -169,6 +209,12 @@ const unfollowUser = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Fetches the friend requests of the logged in user
+ * @param {String} curUser sername of the logged in user
+ * @returns Success/Failure message along with appropriate content
+ */
+
 const getRequests = async (curUser) => {
   try {
     const user = await userModel.findOne({ username: curUser });
@@ -185,6 +231,13 @@ const getRequests = async (curUser) => {
     };
   }
 };
+
+/**
+ * Accepts the request of a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the target user
+ * @returns Success/Failure message along with appropriate message
+ */
 
 const acceptRequest = async (curUser, targetUser) => {
   try {
@@ -228,6 +281,13 @@ const acceptRequest = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Deletes the request of a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the target user
+ * @returns Success/Failure message along with appropriate message
+ */
+
 const deleteRequest = async (curUser, targetUser) => {
   try {
     const user = await userModel.findOne({ username: curUser });
@@ -255,6 +315,13 @@ const deleteRequest = async (curUser, targetUser) => {
     };
   }
 };
+
+/**
+ * Blocks a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the user to be blocked
+ * @returns Success/Failure message along with appropriate message
+ */
 
 const blockUser = async (curUser, targetUser) => {
   try {
@@ -284,6 +351,13 @@ const blockUser = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Unblocks a particular user
+ * @param {String} curUser Username of the logged in user
+ * @param {String} targetUser Username of the user to be unblocked
+ * @returns Success/Failure message along with appropriate message
+ */
+
 const unblockUser = async (curUser, targetUser) => {
   try {
     const isBlocked = await checkBlock(curUser, targetUser);
@@ -306,6 +380,12 @@ const unblockUser = async (curUser, targetUser) => {
   }
 };
 
+/**
+ * Suggest list of potential friends for the user
+ * @param {String} curUser Username of the logged in user
+ * @returns Success/Failure message along with appropriate content
+ */
+
 const suggestFriends = async (curUser) => {
   try {
     let suggestions = [];
@@ -313,13 +393,13 @@ const suggestFriends = async (curUser) => {
     if (user.city) {
       const sameCity = await userModel
         .find({ city: user.city }, "username")
-        .limit(20);
+        .limit(25);
       suggestions.push(...sameCity);
     }
     if (user.organization) {
       const sameOrg = await userModel
         .find({ city: user.organization }, "username")
-        .limit(20);
+        .limit(25);
       suggestions.push(...sameOrg);
     }
     user.friends.map(async (itr) => {
@@ -330,6 +410,9 @@ const suggestFriends = async (curUser) => {
       const j = Math.floor(Math.random() * (i + 1));
       [suggestions[i], suggestions[j]] = [suggestions[j], suggestions[i]];
     }
+    suggestions.filter(async (user) => {
+      await checkBlock(user, curUser);
+    });
     if (suggestions.length > 50) {
       suggestions.slice(0, 50);
     }
