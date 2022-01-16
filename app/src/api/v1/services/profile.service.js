@@ -1,7 +1,6 @@
 const userModel = require("../models/user");
 const checkBlock = require("../helpers/check_block");
 const imageManager = require("../helpers/image_manager");
-const checkBlock = require("../helpers/check_block");
 const bcrypt = require("bcrypt");
 
 /**

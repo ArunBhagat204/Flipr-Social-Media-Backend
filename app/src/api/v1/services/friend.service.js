@@ -322,7 +322,7 @@ const suggestFriends = async (curUser) => {
         .limit(20);
       suggestions.push(...sameOrg);
     }
-    user.friends.map((itr) => {
+    user.friends.map(async (itr) => {
       const userItr = await userModel.findOne({ username: itr });
       suggestions.push(...userItr.friends);
     });
