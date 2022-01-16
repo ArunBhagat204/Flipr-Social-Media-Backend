@@ -77,6 +77,11 @@ const unblockUser = async (req, res) => {
   return res.status(result.success === false ? 500 : 200).json(result);
 };
 
+const suggestFriends = async (req, res) => {
+  const result = await friendService.suggestFriends(req.userId);
+  return res.status(result.success === false ? 500 : 200).json(result.content);
+};
+
 module.exports = {
   getFriends,
   sendRequest,
@@ -89,4 +94,5 @@ module.exports = {
   deleteRequest,
   blockUser,
   unblockUser,
+  suggestFriends,
 };

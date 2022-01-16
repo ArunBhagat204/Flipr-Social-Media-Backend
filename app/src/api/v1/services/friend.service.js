@@ -306,6 +306,45 @@ const unblockUser = async (curUser, targetUser) => {
   }
 };
 
+const suggestFriends = async (curUser) => {
+  try {
+    let suggestions = [];
+    const user = await userModel.findOne({ username: curUser });
+    if (user.city) {
+      const sameCity = await userModel
+        .find({ city: user.city }, "username")
+        .limit(20);
+      suggestions.push(...sameCity);
+    }
+    if (user.organization) {
+      const sameOrg = await userModel
+        .find({ city: user.organization }, "username")
+        .limit(20);
+      suggestions.push(...sameOrg);
+    }
+    user.friends.map((itr) => {
+      const userItr = await userModel.findOne({ username: itr });
+      suggestions.push(...userItr.friends);
+    });
+    for (let i = suggestions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [suggestions[i], suggestions[j]] = [suggestions[j], suggestions[i]];
+    }
+    if (suggestions.length > 50) {
+      suggestions.slice(0, 50);
+    }
+    return {
+      success: true,
+      content: suggestions,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+    };
+  }
+};
+
 module.exports = {
   getFriends,
   sendRequest,
@@ -318,4 +357,5 @@ module.exports = {
   deleteRequest,
   blockUser,
   unblockUser,
+  suggestFriends,
 };

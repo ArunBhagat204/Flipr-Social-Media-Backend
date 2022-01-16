@@ -15,6 +15,8 @@ router.get("/follow", authorization, friendController.getFollowers);
 router.post("/follow", authorization, friendController.followUser);
 router.delete("/follow", authorization, friendController.unfollowUser);
 
+router.get("/suggest", authorization, friendController.suggestFriends);
+
 router.get("/", authorization, friendController.getFriends);
 router.post("/", authorization, friendController.sendRequest);
 router.delete("/", authorization, friendController.removeFriend);

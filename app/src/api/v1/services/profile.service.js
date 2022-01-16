@@ -125,16 +125,18 @@ const uploadPfp = async (image, userId) => {
   try {
     const uploadRes = await imageManager.uploadImage(image);
     if (!uploadRes.success) {
-      throw new Error(`${uploadRes.message}`);
+      throw new Error(uploadRes.message);
     }
-    const updated = await userModel
-      .findOneAndUpdate(
-        { username: userId },
-        {
-          profile_pic: uploadRes.message,
-        }
-      )
-      .exec();
+    const user = await userModel.findOne({ username: userId });
+    if (user.profile_pic != null) {
+      await deletePfp(userId);
+    }
+    await userModel.findOneAndUpdate(
+      { username: userId },
+      {
+        profile_pic: uploadRes.message,
+      }
+    );
     return {
       success: true,
       message: "Profile picture uploaded successfully",
