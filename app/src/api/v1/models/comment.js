@@ -6,6 +6,10 @@ const commentSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    parent: {
+      parent_id: String,
+      isReply: Boolean,
+    },
     content: {
       type: String,
       required: true,
