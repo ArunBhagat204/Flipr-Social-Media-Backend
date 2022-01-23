@@ -1,5 +1,5 @@
 const userModel = require("../models/user");
-const checkBlock = require("../helpers/check_block");
+const checkRelation = require("../helpers/check_relation");
 
 /**
  * Fetches the friend list of a particular user
@@ -32,7 +32,7 @@ const getFriends = async (curUser) => {
 
 const sendRequest = async (curUser, targetUser) => {
   try {
-    const isBlocked = await checkBlock(targetUser, curUser);
+    const isBlocked = await checkRelation.block(targetUser, curUser);
     if (isBlocked) {
       return {
         success: false,
@@ -152,7 +152,7 @@ const getFollowers = async (curUser) => {
 
 const followUser = async (curUser, targetUser) => {
   try {
-    const isBlocked = await checkBlock(targetUser, curUser);
+    const isBlocked = await checkRelation.block(targetUser, curUser);
     if (isBlocked) {
       return {
         success: false,
@@ -374,7 +374,7 @@ const deleteRequest = async (curUser, targetUser) => {
 
 const blockUser = async (curUser, targetUser) => {
   try {
-    const isBlocked = await checkBlock(curUser, targetUser);
+    const isBlocked = await checkRelation.block(curUser, targetUser);
     if (isBlocked) {
       return {
         success: false,
@@ -414,7 +414,7 @@ const blockUser = async (curUser, targetUser) => {
 
 const unblockUser = async (curUser, targetUser) => {
   try {
-    const isBlocked = await checkBlock(curUser, targetUser);
+    const isBlocked = await checkRelation.block(curUser, targetUser);
     if (!isBlocked) {
       return {
         success: false,
@@ -470,7 +470,8 @@ const suggestFriends = async (curUser) => {
       [suggestions[i], suggestions[j]] = [suggestions[j], suggestions[i]];
     }
     suggestions.filter(async (user) => {
-      await checkBlock(user, curUser);
+      const isBlocked = await checkRelation.block(user, curUser);
+      return !isBlocked;
     });
     if (suggestions.length > 50) {
       suggestions.slice(0, 50);

@@ -4,6 +4,7 @@ const search = require("../middlewares/search");
 const authController = require("../controllers/auth.controller");
 const userController = require("../controllers/user.controller");
 const friendRoutes = require("../routes/friend.routes");
+const postRoutes = require("../routes/post.routes");
 const { validate } = require("express-validation");
 const userValidations = require("../validations/user.validation");
 
@@ -48,7 +49,9 @@ router.delete("/pfp", authorization, userController.deletePfp);
 
 router.use("/friends", friendRoutes);
 
-router.get("/", authorization, search, userController.userSearch);
+router.use("/posts", postRoutes);
+
+router.get("/", authorization, search.userSearch, userController.userSearch);
 router.get("/:id", authorization, userController.getProfile);
 router.put(
   "/:id",

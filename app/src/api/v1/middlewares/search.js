@@ -1,12 +1,12 @@
 /**
- * Converts request queries into regex entries and attaches them to request body
+ * Converts user search queries into regex entries and attaches them to request body
  * @param {Object} req Request object of the HTTP request
  * @param {Object} res Response object of the HTTP request
  * @param {Function} next Function to invoke the next middleware
  * @returns Failure message in case of error
  */
 
-const search = (req, res, next) => {
+const userSearch = (req, res, next) => {
   try {
     const queries = {
       userQuery: req.query.username + ".*",
@@ -19,9 +19,35 @@ const search = (req, res, next) => {
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: "Database error",
+      message: err.message,
     });
   }
 };
 
-module.exports = search;
+/**
+ * Converts post search queries into regex entries and attaches them to request body
+ * @param {Object} req Request object of the HTTP request
+ * @param {Object} res Response object of the HTTP request
+ * @param {Function} next Function to invoke the next middleware
+ * @returns Failure message in case of error
+ */
+
+const postSearch = (req, res, next) => {
+  try {
+    const queries = {
+      userQuery: req.query.username + ".*",
+      titleQuery: req.query.title + ".*",
+      hashtagQuery: req.query.hashtag + ".*",
+      pageQuery: req.query.page,
+    };
+    req.body.queries = queries;
+    return next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+module.exports = { userSearch, postSearch };

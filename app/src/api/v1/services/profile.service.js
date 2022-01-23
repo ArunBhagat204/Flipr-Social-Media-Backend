@@ -1,5 +1,5 @@
 const userModel = require("../models/user");
-const checkBlock = require("../helpers/check_block");
+const checkRelation = require("../helpers/check_relation");
 const imageManager = require("../helpers/image_manager");
 const bcrypt = require("bcrypt");
 
@@ -24,9 +24,10 @@ const userSearch = async (curUser, queries) => {
       )
       .limit(100)
       .exec();
-    const results = users.filter(
-      async (user) => await checkBlock(user.username, curUser)
-    );
+    const results = users.filter(async (user) => {
+      const isBlocked = await checkRelation.block(user.username, curUser);
+      return !isBlocked;
+    });
     return {
       success: true,
       users: results,
@@ -56,7 +57,7 @@ const getProfile = async (userId, curUser) => {
         statusCode: 400,
       };
     }
-    const isBlocked = await checkBlock(user.username, curUser);
+    const isBlocked = await checkRelation.block(user.username, curUser);
     if (isBlocked) {
       return {
         success: false,
