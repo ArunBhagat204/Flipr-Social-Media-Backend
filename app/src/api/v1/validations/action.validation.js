@@ -1,9 +1,15 @@
 const { Joi } = require("express-validation");
 
-const interact = {
+const userInteract = {
   body: Joi.object({
     username: Joi.string().required(),
   }),
 };
 
-module.exports = { interact };
+const postInteract = {
+  params: Joi.object({
+    id: Joi.string().required(),
+  }),
+};
+
+module.exports = { userInteract, postInteract };

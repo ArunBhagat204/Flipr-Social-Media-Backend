@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/requests", authorization, friendController.getRequests);
 router.post(
   "/requests",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -17,7 +17,7 @@ router.post(
 );
 router.delete(
   "/requests",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -26,7 +26,7 @@ router.delete(
 
 router.post(
   "/block",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -34,7 +34,7 @@ router.post(
 );
 router.delete(
   "/block",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -44,7 +44,7 @@ router.delete(
 router.get("/follow", authorization, friendController.getFollowers);
 router.post(
   "/follow",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -52,7 +52,7 @@ router.post(
 );
 router.delete(
   "/follow",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -64,7 +64,7 @@ router.get("/suggest", authorization, friendController.suggestFriends);
 router.get("/", authorization, friendController.getFriends);
 router.post(
   "/",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
@@ -72,7 +72,7 @@ router.post(
 );
 router.delete(
   "/",
-  validate(actionValidations.interact, {
+  validate(actionValidations.userInteract, {
     keyByField: true,
   }),
   authorization,
