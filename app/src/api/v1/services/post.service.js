@@ -1,5 +1,6 @@
 const postModel = require("../models/post");
 const userModel = require("../models/user");
+const friendService = require("../services/friend.service");
 const commentService = require("../services/comment.service");
 const imageManager = require("../helpers/image_manager");
 const checkRelation = require("../helpers/check_relation");
@@ -271,6 +272,52 @@ const unlikePost = async (curUser, postId) => {
   }
 };
 
+const getFeed = async (curUser, pageNumber) => {
+  try {
+    const user = await userModel.findOne({ username: curUser });
+    let posts;
+    user.friends.map(async (friend) => {
+      const friendPosts = await postModel
+        .find({ author: friend })
+        .sort({ "timestamps.updatedAt": "desc" })
+        .skip(3 * (pageNumber - 1))
+        .limit(3);
+      posts.push(friendPosts);
+    });
+    const suggestedFriends = await friendService.suggestFriends(curUser);
+    suggestedFriends.content.map(async (friend) => {
+      const friendPosts = await postModel
+        .find({ author: friend })
+        .sort({ "timestamps.updatedAt": "desc" })
+        .skip(3 * (pageNumber - 1))
+        .limit(3);
+      posts.push(friendPosts);
+    });
+    posts.filter(async (post) => {
+      const isBlocked = await checkRelation.block(post.author, curUser);
+      const isFriend = await checkRelation.friend(post.author, curUser);
+      if (isBlocked || (post.isPublic === false && isFriend === false)) {
+        return false;
+      }
+      return true;
+    });
+    for (let i = posts.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [posts[i], posts[j]] = [posts[j], posts[i]];
+    }
+    return {
+      success: true,
+      content: posts,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   searchPosts,
   getPost,
@@ -279,4 +326,5 @@ module.exports = {
   deletePost,
   likePost,
   unlikePost,
+  getFeed,
 };

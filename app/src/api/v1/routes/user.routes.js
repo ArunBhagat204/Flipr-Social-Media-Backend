@@ -1,10 +1,13 @@
 const express = require("express");
-const authorization = require("../middlewares/authorization");
 const search = require("../middlewares/search");
+const authorization = require("../middlewares/authorization");
+
 const authController = require("../controllers/auth.controller");
 const userController = require("../controllers/user.controller");
+
 const friendRoutes = require("../routes/friend.routes");
 const postRoutes = require("../routes/post.routes");
+
 const { validate } = require("express-validation");
 const userValidations = require("../validations/user.validation");
 
@@ -46,6 +49,8 @@ router.post(
   userController.uploadPfp
 );
 router.delete("/pfp", authorization, userController.deletePfp);
+
+router.get("/feed", authorization, userController.getFeed);
 
 router.use("/friends", friendRoutes);
 

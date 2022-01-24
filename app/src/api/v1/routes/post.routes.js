@@ -91,6 +91,7 @@ router.get(
   authorization,
   postController.getComment
 );
+
 router.post(
   "/comments/:id",
   authorization,

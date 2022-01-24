@@ -1,5 +1,6 @@
 const accountServices = require("../services/account.service");
 const profileServices = require("../services/profile.service");
+const postService = require("../services/post.service");
 const errorHandler = require("../helpers/error_handler");
 
 const userSearch = async (req, res) => {
@@ -8,6 +9,18 @@ const userSearch = async (req, res) => {
     errorHandler(new Error(result.message), res, result.statusCode);
   } else {
     res.status(200).json(result);
+  }
+};
+
+const getFeed = async (req, res) => {
+  const result = await postService.getFeed(req.userId, req.query.page);
+  if (result.success === false) {
+    errorHandler(new Error(result.message), res, result.statusCode);
+  } else {
+    return res.status(200).json({
+      success: true,
+      posts: result.content,
+    });
   }
 };
 
@@ -68,6 +81,7 @@ module.exports = {
   getProfile,
   editProfile,
   userSearch,
+  getFeed,
   uploadPfp,
   deletePfp,
 };
