@@ -50,4 +50,28 @@ const postSearch = (req, res, next) => {
   }
 };
 
-module.exports = { userSearch, postSearch };
+/**
+ * Converts comment search queries to request body
+ * @param {Object} req Request object of the HTTP request
+ * @param {Object} res Response object of the HTTP request
+ * @param {Function} next Function to invoke the next middleware
+ * @returns Failure message in case of error
+ */
+
+const commentSearch = (req, res, next) => {
+  try {
+    const queries = {
+      postId: req.query.postId,
+      pageQuery: req.query.page,
+    };
+    req.body.queries = queries;
+    return next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+module.exports = { userSearch, postSearch, commentSearch };

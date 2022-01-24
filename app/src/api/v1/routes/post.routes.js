@@ -23,7 +23,7 @@ router.get(
 );
 router.get(
   "/:id",
-  validate(actionValidations.postInteract, {
+  validate(actionValidations.contentInteract, {
     keyByField: true,
   }),
   authorization,
@@ -50,7 +50,7 @@ router.put(
 );
 router.delete(
   "/:id",
-  validate(actionValidations.postInteract, {
+  validate(actionValidations.contentInteract, {
     keyByField: true,
   }),
   authorization,
@@ -59,7 +59,7 @@ router.delete(
 
 router.get(
   "/like/:id",
-  validate(actionValidations.postInteract, {
+  validate(actionValidations.contentInteract, {
     keyByField: true,
   }),
   authorization,
@@ -67,11 +67,53 @@ router.get(
 );
 router.get(
   "/unlike/:id",
-  validate(actionValidations.postInteract, {
+  validate(actionValidations.contentInteract, {
     keyByField: true,
   }),
   authorization,
   postController.unlikePost
+);
+
+router.get(
+  "/comments",
+  validate(postValidations.fetchComments, {
+    keyByField: true,
+  }),
+  authorization,
+  search.commentSearch,
+  postController.fetchComments
+);
+router.get(
+  "/comments/:id",
+  validate(actionValidations.contentInteract, {
+    keyByField: true,
+  }),
+  authorization,
+  postController.getComment
+);
+router.post(
+  "/comments/:id",
+  authorization,
+  validate(postValidations.createComment, {
+    keyByField: true,
+  }),
+  postController.createComment
+);
+router.put(
+  "/comments/:id",
+  authorization,
+  validate(postValidations.editComment, {
+    keyByField: true,
+  }),
+  postController.editComment
+);
+router.delete(
+  "/comments/:id",
+  validate(actionValidations.contentInteract, {
+    keyByField: true,
+  }),
+  authorization,
+  postController.deleteComment
 );
 
 module.exports = router;

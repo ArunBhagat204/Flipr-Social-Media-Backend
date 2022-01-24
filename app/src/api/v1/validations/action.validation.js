@@ -6,10 +6,10 @@ const userInteract = {
   }),
 };
 
-const postInteract = {
+const contentInteract = {
   params: Joi.object({
     id: Joi.string().required(),
   }),
 };
 
-module.exports = { userInteract, postInteract };
+module.exports = { userInteract, contentInteract };

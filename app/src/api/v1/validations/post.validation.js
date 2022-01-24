@@ -29,8 +29,31 @@ const editPost = {
   }),
 };
 
+const fetchComments = {
+  query: Joi.object({
+    postId: Joi.string().required(),
+    page: Joi.number().required(),
+  }),
+};
+
+const createComment = {
+  body: Joi.object({
+    content: Joi.string().required(),
+    isReply: Joi.boolean().required(),
+  }),
+};
+
+const editComment = {
+  body: Joi.object({
+    content: Joi.string().required(),
+  }),
+};
+
 module.exports = {
   postSearch,
   createPost,
   editPost,
+  fetchComments,
+  createComment,
+  editComment,
 };

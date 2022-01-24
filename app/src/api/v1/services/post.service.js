@@ -1,5 +1,6 @@
 const postModel = require("../models/post");
 const userModel = require("../models/user");
+const commentService = require("../services/comment.service");
 const imageManager = require("../helpers/image_manager");
 const checkRelation = require("../helpers/check_relation");
 
@@ -62,14 +63,8 @@ const getPost = async (curUser, postId) => {
       };
     }
     if (post.isPublic === false) {
-      let isFriend = false;
       const author = await userModel.findOne({ username: post.author });
-      author.friends.map(async (itr) => {
-        if (itr === curUser) {
-          isFriend = true;
-        }
-      });
-      if (!isFriend) {
+      if (!checkRelation.friend(author, curUser)) {
         return {
           success: false,
           message: "User has restricted post to friends only",
@@ -184,7 +179,7 @@ const deletePost = async (curUser, postId) => {
     }
     post.comments.map(async (itr) => {
       const comment = await postModel.findById(itr);
-      deleteComment(comment.author, itr);
+      commentService.deleteComment(comment.author, itr);
     });
     await postModel.findByIdAndDelete(postId);
     return {
