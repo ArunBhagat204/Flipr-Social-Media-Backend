@@ -2,6 +2,13 @@ const postModel = require("../models/post");
 const commentModel = require("../models/comment");
 const checkRelation = require("../helpers/check_relation");
 
+/**
+ * Fetch all comments of a particular post in a paginated manner
+ * @param {String} curUser Username of the logged in user
+ * @param {Object} queries Object containing all the user queries
+ * @returns List of comments matching the user search queries
+ */
+
 const fetchComments = async (curUser, queries) => {
   try {
     const pageNumber = queries.pageQuery;
@@ -33,6 +40,13 @@ const fetchComments = async (curUser, queries) => {
     };
   }
 };
+
+/**
+ * Fetch a particular comment and it's replies
+ * @param {String} curUser Username of the logged in user
+ * @param {String} commentId Id of the comment to be fetched
+ * @returns Comment which was to be fetched
+ */
 
 const getComment = async (curUser, commentId) => {
   try {
@@ -71,6 +85,14 @@ const getComment = async (curUser, commentId) => {
     };
   }
 };
+
+/**
+ * Create a new comment
+ * @param {String} curUser Username of the logged in user
+ * @param {String} parId Id of the comment's parent entity
+ * @param {Object} content Object containing the new comment content
+ * @returns Success/Failure response along with associated message
+ */
 
 const createComment = async (curUser, parId, content) => {
   try {
@@ -115,6 +137,14 @@ const createComment = async (curUser, parId, content) => {
   }
 };
 
+/**
+ * Edit a particular comment
+ * @param {String} curUser Username of the logged in user
+ * @param {String} commentId Id of the comment to be deleted
+ * @param {Object} updatedContent Object containing the updated image content
+ * @returns Success/Failure response along with associated message
+ */
+
 const editComment = async (curUser, commentId, updatedContent) => {
   try {
     const comment = await commentModel.findById(commentId);
@@ -147,6 +177,13 @@ const editComment = async (curUser, commentId, updatedContent) => {
     };
   }
 };
+
+/**
+ * Delete a particular comment
+ * @param {String} curUser Username of the logged in user
+ * @param {String} commentId Id of the comment to be deleted
+ * @returns Success/Failure response along with associated message
+ */
 
 const deleteComment = async (curUser, commentId) => {
   try {

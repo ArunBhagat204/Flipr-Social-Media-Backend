@@ -5,6 +5,13 @@ const commentService = require("../services/comment.service");
 const imageManager = require("../helpers/image_manager");
 const checkRelation = require("../helpers/check_relation");
 
+/**
+ * Search for posts based on user queries
+ * @param {String} curUser Username of the logged in user
+ * @param {Object} queries Object containing all of the search queries
+ * @returns List of posts matching the search criteria
+ */
+
 const searchPosts = async (curUser, queries) => {
   try {
     const pageNumber = queries.pageQuery;
@@ -53,6 +60,13 @@ const searchPosts = async (curUser, queries) => {
   }
 };
 
+/**
+ * Fetch a particular post
+ * @param {String} curUser Username of the logged in user
+ * @param {String} postId Id of the post to be fetched
+ * @returns Success/Failure response with associated message
+ */
+
 const getPost = async (curUser, postId) => {
   try {
     const post = await postModel.findById(postId);
@@ -86,6 +100,14 @@ const getPost = async (curUser, postId) => {
   }
 };
 
+/**
+ * Create a new post
+ * @param {String} curUser Username of the logged in user
+ * @param {Object} image Object containing image buffer and metadata
+ * @param {Object} content Object containing post content
+ * @returns Success/Failure response with associated message
+ */
+
 const createPost = async (curUser, image, content) => {
   try {
     let imageLink = null;
@@ -118,6 +140,15 @@ const createPost = async (curUser, image, content) => {
     };
   }
 };
+
+/**
+ * Edit a particular post
+ * @param {String} curUser Username of the logged in user
+ * @param {String} postId Id of the post to be deleted
+ * @param {Object} updatedImage Object containing image buffer and metadata
+ * @param {Object} updatedContent Object containing updated post content
+ * @returns Success/Failure response with associated message
+ */
 
 const editPost = async (curUser, postId, updatedImage, updatedContent) => {
   try {
@@ -161,6 +192,13 @@ const editPost = async (curUser, postId, updatedImage, updatedContent) => {
   }
 };
 
+/**
+ * Delete a particular post
+ * @param {String} curUser Username of the logged in user
+ * @param {String} postId Id of the post to be deleted
+ * @returns Success/Failure response with associated message
+ */
+
 const deletePost = async (curUser, postId) => {
   try {
     const post = await postModel.findById(postId);
@@ -195,6 +233,13 @@ const deletePost = async (curUser, postId) => {
     };
   }
 };
+
+/**
+ * Like a particular post
+ * @param {String} curUser Username of the logged in user
+ * @param {String} postId Id of the post to be liked
+ * @returns Success/Failure response with associated message
+ */
 
 const likePost = async (curUser, postId) => {
   try {
@@ -234,6 +279,13 @@ const likePost = async (curUser, postId) => {
   }
 };
 
+/**
+ * Unlike a particular post
+ * @param {String} curUser Username of the logged in user
+ * @param {String} postId Id of the post to be unliked
+ * @returns Success/Failure response with associated message
+ */
+
 const unlikePost = async (curUser, postId) => {
   try {
     const post = await postModel.findById(postId);
@@ -271,6 +323,13 @@ const unlikePost = async (curUser, postId) => {
     };
   }
 };
+
+/**
+ * Provide content for user feed
+ * @param {String} curUser Username of the logged in user
+ * @param {Number} pageNumber Page number of the requested page
+ * @returns List of posts to be displayed on the user feed
+ */
 
 const getFeed = async (curUser, pageNumber) => {
   try {
