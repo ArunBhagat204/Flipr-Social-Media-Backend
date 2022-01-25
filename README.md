@@ -18,15 +18,14 @@ Complete documentation for the API endpoints present in the applications can be 
 
 ## Features
 
-_Upon the completion of Module 2_
+_Upon the completion of Module 3_
 
-- User management and Email microservice features present in Module 1
-- Detailed user profile with more info and profile picture
-- Follow and unfollow user feature
-- User blocking/unblocking feature
-- Send, Accept, Reject Friend requests
-- Suggest friends feature using common city, organization or mutual connections
-- Fetch all friends and friend requests
-- Remove user as friend as well as hide profile from blocked users in search results
-- Separate image management microservice
-- Upload and delete image from cloud storage
+- User management, Friend management features along with Email and Image microservices (completed in project module 1 and 2)
+- Customized user feed containing posts from friends as well as suggested friends
+- CRUD operations on posts
+- CRUD operations on comments
+- Comment replies
+- Post Search
+- Like and Unlike posts
+- Post Visibility options (public or friends only)
+- Option to tag users or add hashtags to posts
