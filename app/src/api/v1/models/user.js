@@ -31,6 +31,11 @@ const userSchema = mongoose.Schema(
       required: true,
       default: true,
     },
+    private_profile: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     profile_pic: {
       type: String,
       default: null,

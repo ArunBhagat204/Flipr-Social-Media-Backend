@@ -65,6 +65,13 @@ const getProfile = async (userId, curUser) => {
         statusCode: 403,
       };
     }
+    if (user.private_profile && !checkRelation.friend(user.username, curUser)) {
+      return {
+        success: false,
+        message: "User has a private profile",
+        statusCode: 403,
+      };
+    }
     return {
       username: user.username,
       email: user.email,
@@ -120,6 +127,7 @@ const editProfile = async (userId, body, authId) => {
           organization: body.organization,
           accepting_friends: body.accepting_friends,
           notifications: body.notifications,
+          private_profile: body.private_profile,
         }
       )
       .exec();

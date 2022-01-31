@@ -77,9 +77,19 @@ const getPost = async (curUser, postId) => {
         statusCode: 404,
       };
     }
+    const author = await userModel.findOne({ username: post.author });
+    if (
+      author.private_profile &&
+      !checkRelation.friend(author.username, curUser)
+    ) {
+      return {
+        success: false,
+        message: "User has a private profile",
+        statusCode: 403,
+      };
+    }
     if (post.isPublic === false) {
-      const author = await userModel.findOne({ username: post.author });
-      if (!checkRelation.friend(author, curUser)) {
+      if (!checkRelation.friend(author.username, curUser)) {
         return {
           success: false,
           message: "User has restricted post to friends only",

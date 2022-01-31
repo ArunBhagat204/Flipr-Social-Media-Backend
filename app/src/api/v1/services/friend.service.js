@@ -192,6 +192,13 @@ const followUser = async (curUser, targetUser) => {
         };
       }
     });
+    if (target.private_profile && !checkRelation.friend(targetUser, curUser)) {
+      return {
+        success: false,
+        message: "User has a private profile",
+        statusCode: 403,
+      };
+    }
     await userModel.findOneAndUpdate(
       { username: curUser },
       {
