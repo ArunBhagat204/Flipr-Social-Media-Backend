@@ -41,7 +41,7 @@ const registerUser = async (req) => {
       body: `Hey ${req.username}!<br><br>
             Thank you for creating an account at Social Media App.<br>
             Click on the link to verify your account: 
-            http://localhost:3000/users/email_verify?token=${verificationToken}<br><br>
+            http://${process.env.HOSTNAME}:${process.env.PORT}/users/email_verify?token=${verificationToken}<br><br>
             Team Social-Media-App`,
     };
     emailSender.send(mail);

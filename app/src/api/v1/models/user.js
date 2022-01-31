@@ -26,6 +26,11 @@ const userSchema = mongoose.Schema(
       required: true,
       default: true,
     },
+    notifications: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
     profile_pic: {
       type: String,
       default: null,

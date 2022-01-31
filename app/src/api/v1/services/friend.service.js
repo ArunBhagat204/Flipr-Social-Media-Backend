@@ -1,4 +1,5 @@
 const userModel = require("../models/user");
+const emailSender = require("../helpers/email_sender");
 const checkRelation = require("../helpers/check_relation");
 
 /**
@@ -61,6 +62,19 @@ const sendRequest = async (curUser, targetUser) => {
         };
       }
     });
+    if (recipient.notifations) {
+      const mail = {
+        address: recipient.email,
+        subject: `New Friend Request from ${curUser}`,
+        body: `Hey ${recipient.username}!<br><br>
+              You have a new friend request from user ${curUser}!<br>
+              View all your pending requests here: 
+              http://${process.env.HOSTNAME}:${process.env.PORT}/users/friends/requests
+              <br><br>
+              Team Social-Media-App`,
+      };
+      emailSender.send(mail);
+    }
     await userModel.findOneAndUpdate(
       { username: targetUser },
       { $push: { friend_requests: newRequest } }
@@ -312,6 +326,20 @@ const acceptRequest = async (curUser, targetUser) => {
       { username: curUser },
       { $pull: { friend_requests: { from: targetUser } } }
     );
+    const sender = await userModel.findOne({ username: targetUser });
+    if (sender.notifations) {
+      const mail = {
+        address: sender.email,
+        subject: `${curUser} accepted your friend request!`,
+        body: `Hey ${sender.username}!<br><br>
+              Your friend request to the user ${curUser} has been accepted!<br>
+              View their profile here: 
+              http://${process.env.HOSTNAME}:${process.env.PORT}/users/${user._id}
+              <br><br>
+              Team Social-Media-App`,
+      };
+      emailSender.send(mail);
+    }
     return {
       success: true,
       message: "Request accepted",

@@ -119,6 +119,7 @@ const editProfile = async (userId, body, authId) => {
           city: body.city,
           organization: body.organization,
           accepting_friends: body.accepting_friends,
+          notifications: body.notifications,
         }
       )
       .exec();
