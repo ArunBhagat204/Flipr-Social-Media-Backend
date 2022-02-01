@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const cron = require("node-cron");
 
 const postSchema = mongoose.Schema(
   {
@@ -72,5 +73,19 @@ const postSchema = mongoose.Schema(
 );
 
 const post = mongoose.model("Post", postSchema);
+
+try {
+  cron.schedule(
+    "0 0 0 1 * *",
+    async () => {
+      await post.updateMany({}, { views_this_month: 0, likes_this_month: 0 });
+    },
+    {
+      scheduled: true,
+    }
+  );
+} catch (err) {
+  console.log(`[TASK SCHEDULING ERROR]: ${err.message}`);
+}
 
 module.exports = post;

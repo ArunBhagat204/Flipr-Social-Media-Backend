@@ -72,6 +72,9 @@ const getProfile = async (userId, curUser) => {
         statusCode: 403,
       };
     }
+    await userModel.findByIdAndUpdate(userId, {
+      $inc: { profile_views_monthly: 1 },
+    });
     return {
       username: user.username,
       email: user.email,

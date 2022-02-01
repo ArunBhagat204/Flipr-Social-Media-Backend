@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const cron = require("node-cron");
 
 const userSchema = mongoose.Schema(
   {
@@ -35,6 +36,11 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       required: true,
       default: false,
+    },
+    profile_views_monthly: {
+      type: Number,
+      required: true,
+      default: 0,
     },
     profile_pic: {
       type: String,
@@ -91,5 +97,19 @@ userSchema.pre("save", async function (next) {
 });
 
 const user = mongoose.model("User", userSchema);
+
+try {
+  cron.schedule(
+    "0 0 0 1 * *",
+    async () => {
+      await user.updateMany({}, { profile_views_monthly: 0 });
+    },
+    {
+      scheduled: true,
+    }
+  );
+} catch (err) {
+  console.log(`[TASK SCHEDULING ERROR]: ${err.message}`);
+}
 
 module.exports = user;
