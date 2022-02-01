@@ -42,6 +42,11 @@ const userSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    profile_views_yearly: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     profile_pic: {
       type: String,
       default: null,
@@ -103,6 +108,15 @@ try {
     "0 0 0 1 * *",
     async () => {
       await user.updateMany({}, { profile_views_monthly: 0 });
+    },
+    {
+      scheduled: true,
+    }
+  );
+  cron.schedule(
+    "0 0 0 1 1 *",
+    async () => {
+      await user.updateMany({}, { profile_views_yearly: 0 });
     },
     {
       scheduled: true,

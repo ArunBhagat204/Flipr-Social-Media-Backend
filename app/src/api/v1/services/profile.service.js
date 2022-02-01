@@ -1,4 +1,6 @@
 const userModel = require("../models/user");
+const postModel = require("../models/post");
+const commentModel = require("../models/comment");
 const checkRelation = require("../helpers/check_relation");
 const imageManager = require("../helpers/image_manager");
 const bcrypt = require("bcrypt");
@@ -188,7 +190,7 @@ const uploadPfp = async (image, userId) => {
 };
 
 /**
- * Removed the profile picture of the logged in user
+ * Remove the profile picture of the logged in user
  * @param {string} userId Username of the logged in user
  * @returns Success/Failure response along with associated message
  */
@@ -221,4 +223,54 @@ const deletePfp = async (userId) => {
   }
 };
 
-module.exports = { userSearch, getProfile, editProfile, uploadPfp, deletePfp };
+/**
+ * Get metrics relating to user's account
+ * @param {String} curUser Username of the logged in user
+ * @returns Metrics relating to user's account
+ */
+
+const getMetrics = async (curUser) => {
+  try {
+    const user = await userModel.find({ username: curUser });
+    let metrics = {};
+    const curDate = new Date();
+    const oneMonthAgo = new Date(curDate).setMonth(now.getMonth() - 1);
+
+    metrics.profile["Views_this_month"] = user.profile_views_monthly;
+    metrics.profile["Views_this_year"] = user.profile_views_yearly;
+
+    metrics.posts["Created_total"] = await postModel.count({ author: curUser });
+    metrics.posts["Created_this_month"] = await postModel.count({
+      author: curUser,
+      timestamps: { createdAt: { $gte: { oneMonthAgo } } },
+    });
+
+    metrics.comments["Created_total"] = await commentModel.count({
+      author: curUser,
+    });
+    metrics.comments["Created_this_month"] = await commentModel.count({
+      author: curUser,
+      timestamps: { createdAt: { $gte: { oneMonthAgo } } },
+    });
+
+    return {
+      success: true,
+      content: metrics,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+      statusCode: 500,
+    };
+  }
+};
+
+module.exports = {
+  userSearch,
+  getProfile,
+  editProfile,
+  uploadPfp,
+  deletePfp,
+  getMetrics,
+};

@@ -52,6 +52,8 @@ router.delete("/pfp", authorization, userController.deletePfp);
 
 router.get("/feed", authorization, userController.getFeed);
 
+router.get("/metrics", authorization, userController.getMetrics);
+
 router.use("/friends", friendRoutes);
 
 router.use("/posts", postRoutes);

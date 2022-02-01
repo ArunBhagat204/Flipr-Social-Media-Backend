@@ -24,6 +24,18 @@ const getFeed = async (req, res) => {
   }
 };
 
+const getMetrics = async (req, res) => {
+  const result = await profileServices.getMetrics(req.userId);
+  if (result.success === false) {
+    errorHandler(new Error(result.message), res, result.statusCode);
+  } else {
+    return res.status(200).json({
+      success: true,
+      metrics: result.content,
+    });
+  }
+};
+
 const getProfile = async (req, res) => {
   const result = await profileServices.getProfile(req.params.id, req.userId);
   if (result.success === false) {
@@ -82,6 +94,7 @@ module.exports = {
   editProfile,
   userSearch,
   getFeed,
+  getMetrics,
   uploadPfp,
   deletePfp,
 };
