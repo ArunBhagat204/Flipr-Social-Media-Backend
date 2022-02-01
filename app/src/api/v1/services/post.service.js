@@ -394,6 +394,44 @@ const getFeed = async (curUser, pageNumber) => {
   }
 };
 
+/**
+ * Provide post-wise engagement metrics in a paginated manner
+ * @param {String} curUser Username of the logged in user
+ * @param {Number} pageNumber Number of the requested page
+ * @returns List of posts along with their engagement metrics
+ */
+
+const getEngagement = async (curUser, pageNumber) => {
+  try {
+    let engagements = [];
+    const posts = await postModel
+      .find({ author: curUser })
+      .sort({ "timestamps.createdAt": "desc" })
+      .skip(10 * (pageNumber - 1))
+      .limit(10);
+    posts.map(async (post) => {
+      let metric = {};
+      metric["Post_id"] = post._id;
+      metric["Post_title"] = post.title;
+      metric["Likes_total"] = post.like_count;
+      metric["Likes_this_month"] = post.likes_this_month;
+      metric["Views_total"] = post.view_count;
+      metric["Views_this_month"] = post.views_this_month;
+      engagements.push(metric);
+    });
+    return {
+      success: true,
+      content: engagements,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.message,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   searchPosts,
   getPost,
@@ -403,4 +441,5 @@ module.exports = {
   likePost,
   unlikePost,
   getFeed,
+  getEngagement,
 };

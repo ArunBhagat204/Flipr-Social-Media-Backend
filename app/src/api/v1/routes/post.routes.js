@@ -117,4 +117,6 @@ router.delete(
   postController.deleteComment
 );
 
+router.get("/engagement", authorization, postController.getEngagement);
+
 module.exports = router;

@@ -138,6 +138,18 @@ const deleteComment = async (req, res) => {
   }
 };
 
+const getEngagement = async (req, res) => {
+  const result = await postService.getEngagement(req.userId, req.query.page);
+  if (result.success === false) {
+    errorHandler(new Error(result.message), res, result.statusCode);
+  } else {
+    res.status(200).json({
+      success: true,
+      metrics: result.content,
+    });
+  }
+};
+
 module.exports = {
   searchPosts,
   getPost,
@@ -151,4 +163,5 @@ module.exports = {
   createComment,
   editComment,
   deleteComment,
+  getEngagement,
 };

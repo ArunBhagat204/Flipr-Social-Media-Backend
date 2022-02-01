@@ -235,6 +235,10 @@ const getMetrics = async (curUser) => {
     let metrics = {};
     const curDate = new Date();
     const oneMonthAgo = new Date(curDate).setMonth(now.getMonth() - 1);
+    const mostLiked = await postModel
+      .find({ author: curUser })
+      .sort({ like_count: "desc" })
+      .limit(10);
 
     metrics.profile["Views_this_month"] = user.profile_views_monthly;
     metrics.profile["Views_this_year"] = user.profile_views_yearly;
@@ -244,6 +248,7 @@ const getMetrics = async (curUser) => {
       author: curUser,
       timestamps: { createdAt: { $gte: { oneMonthAgo } } },
     });
+    metrics.posts["Most_liked_posts"] = mostLiked;
 
     metrics.comments["Created_total"] = await commentModel.count({
       author: curUser,
@@ -252,7 +257,6 @@ const getMetrics = async (curUser) => {
       author: curUser,
       timestamps: { createdAt: { $gte: { oneMonthAgo } } },
     });
-
     return {
       success: true,
       content: metrics,
