@@ -97,6 +97,9 @@ const getPost = async (curUser, postId) => {
         };
       }
     }
+    await postModel.findByIdAndUpdate(postId, {
+      $inc: { view_count: 1, views_this_month: 1 },
+    });
     return {
       success: true,
       content: post,
@@ -275,7 +278,9 @@ const likePost = async (curUser, postId) => {
       };
     }
     await postModel.findByIdAndUpdate(postId, { $push: { likes: curUser } });
-    await postModel.findByIdAndUpdate(postId, { $inc: { like_count: 1 } });
+    await postModel.findByIdAndUpdate(postId, {
+      $inc: { like_count: 1, likes_this_month: 1 },
+    });
     return {
       success: true,
       message: "Post liked successfully",
@@ -320,7 +325,9 @@ const unlikePost = async (curUser, postId) => {
       };
     }
     await postModel.findByIdAndUpdate(postId, { $pull: { likes: curUser } });
-    await postModel.findByIdAndUpdate(postId, { $inc: { like_count: -1 } });
+    await postModel.findByIdAndUpdate(postId, {
+      $inc: { like_count: -1, likes_this_month: -1 },
+    });
     return {
       success: true,
       message: "Post unliked successfully",

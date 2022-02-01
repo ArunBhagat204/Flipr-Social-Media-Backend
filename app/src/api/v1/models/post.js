@@ -35,6 +35,21 @@ const postSchema = mongoose.Schema(
       required: true,
       default: 0,
     },
+    likes_this_month: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    view_count: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    views_this_month: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     comments: [
       {
         type: String,
