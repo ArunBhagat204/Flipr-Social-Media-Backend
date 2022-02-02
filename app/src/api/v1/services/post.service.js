@@ -100,6 +100,24 @@ const getPost = async (curUser, postId) => {
     await postModel.findByIdAndUpdate(postId, {
       $inc: { view_count: 1, views_this_month: 1 },
     });
+    post.hashtags.map(async (hashtag) => {
+      await userModel.findOneAndUpdate(
+        { username: curUser, favourite_tags: { tag: hashtag } },
+        {
+          $inc: { "favourite_tags.$[element].hits_today": 1 },
+          $setOnInsert: {
+            $push: {
+              favourite_tags: {
+                tag: hashtag,
+                hits_today: 1,
+                score: 0,
+              },
+            },
+          },
+        },
+        { arrayFilters: [{ "element.tag": hashtag }], upsert: true }
+      );
+    });
     return {
       success: true,
       content: post,
@@ -368,6 +386,14 @@ const getFeed = async (curUser, pageNumber) => {
         .skip(3 * (pageNumber - 1))
         .limit(3);
       posts.push(friendPosts);
+    });
+    user.favourite_tags.map(async (itr) => {
+      const tagPosts = await postModel
+        .find({ hashtags: itr.tag })
+        .sort({ "timestamps.updatedAt": "desc" })
+        .skip(3 * (pageNumber - 1))
+        .limit(3);
+      posts.push(tagPosts);
     });
     posts.filter(async (post) => {
       const isBlocked = await checkRelation.block(post.author, curUser);

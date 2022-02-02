@@ -85,6 +85,13 @@ const userSchema = mongoose.Schema(
         type: String,
       },
     ],
+    favourite_tags: [
+      {
+        tag: String,
+        hits_today: Number,
+        score: Number,
+      },
+    ],
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
@@ -107,7 +114,7 @@ try {
   cron.schedule(
     "0 0 0 1 * *",
     async () => {
-      await user.updateMany({}, { profile_views_monthly: 0 });
+      await user.updateMany({}, { $set: { profile_views_monthly: 0 } });
     },
     {
       scheduled: true,
@@ -116,7 +123,25 @@ try {
   cron.schedule(
     "0 0 0 1 1 *",
     async () => {
-      await user.updateMany({}, { profile_views_yearly: 0 });
+      await user.updateMany({}, { $set: { profile_views_yearly: 0 } });
+    },
+    {
+      scheduled: true,
+    }
+  );
+  cron.schedule(
+    "0 0 0 * * *",
+    async () => {
+      await user.updateMany(
+        {},
+        {
+          $set: {
+            "favourite_tags.$.score":
+              "favourite_tags.$.score" * 0.67 + "favourite_tags.$.hits_today",
+            "favourite_tags.$.hits_today": 0,
+          },
+        }
+      );
     },
     {
       scheduled: true,
