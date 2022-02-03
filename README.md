@@ -18,14 +18,10 @@ Complete documentation for the API endpoints present in the applications can be 
 
 ## Features
 
-_Upon the completion of Module 3_
+_Upon the completion of Module 4_
 
-- User management, Friend management features along with Email and Image microservices (completed in project module 1 and 2)
-- Customized user feed containing posts from friends as well as suggested friends
-- CRUD operations on posts
-- CRUD operations on comments
-- Comment replies
-- Post Search
-- Like and Unlike posts
-- Post Visibility options (public or friends only)
-- Option to tag users or add hashtags to posts
+- User, Friend and Post management features along with Email and Image microservices (completed in project module 1, 2 and 3)
+- Email notifications
+- Profile visibility
+- Data aggregation
+- Extended Feed
